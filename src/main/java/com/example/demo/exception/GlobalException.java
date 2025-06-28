@@ -30,4 +30,15 @@ public class GlobalException {
                 request.getDescription(false).replace("uri=", ""));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException e,
+            WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                "Conflict",
+                e.getMessage(),
+                request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
 }

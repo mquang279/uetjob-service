@@ -5,8 +5,11 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.LoginDTO;
 import com.example.demo.entity.User;
+import com.example.demo.exception.EmailAlreadyExistsException;
 import com.example.demo.exception.UserIdNotValidException;
+import com.example.demo.exception.UsernameNotFoundException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 
@@ -20,6 +23,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
+        // Check if email already exists
+        if (this.userRepository.existsByEmail(user.getEmail())) {
+            throw new EmailAlreadyExistsException(user.getEmail());
+        }
         return this.userRepository.save(user);
     }
 
@@ -39,11 +46,17 @@ public class UserServiceImpl implements UserService {
         User existingUser = this.getUserById(id);
 
         if (user.getEmail() != null) {
+            if (this.userRepository.existsByEmail(user.getEmail())) {
+                User userWithEmail = this.userRepository.findByEmail(user.getEmail());
+                if (userWithEmail != null && !userWithEmail.getId().equals(id)) {
+                    throw new EmailAlreadyExistsException(user.getEmail());
+                }
+            }
             existingUser.setEmail(user.getEmail());
         }
 
-        if (user.getName() != null) {
-            existingUser.setName(user.getName());
+        if (user.getUsername() != null) {
+            existingUser.setUsername(user.getUsername());
         }
 
         if (user.getPassword() != null) {
@@ -57,6 +70,16 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         User user = this.getUserById(id);
         this.userRepository.delete(user);
+    }
+
+    @Override
+    public LoginDTO userToLoginDTO(User user) {
+        return new LoginDTO(user.getUsername(), user.getPassword());
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return this.userRepository.findByEmail(email);
     }
 
 }
