@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.User;
+import com.example.demo.exception.UserIdNotValidException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 
@@ -30,34 +31,32 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Long id) {
         Optional<User> userOptional = this.userRepository.findById(id);
-        return userOptional.orElse(null);
+        return userOptional.orElseThrow(() -> new UserIdNotValidException(id));
     }
 
     @Override
     public User updateUser(Long id, User user) {
         User existingUser = this.getUserById(id);
-        if (existingUser != null) {
-            if (user.getEmail() != null) {
-                existingUser.setEmail(user.getEmail());
-            }
 
-            if (user.getName() != null) {
-                existingUser.setName(user.getName());
-            }
-
-            if (user.getPassword() != null) {
-                existingUser.setPassword(user.getPassword());
-            }
-            return this.userRepository.save(existingUser);
+        if (user.getEmail() != null) {
+            existingUser.setEmail(user.getEmail());
         }
-        return null;
+
+        if (user.getName() != null) {
+            existingUser.setName(user.getName());
+        }
+
+        if (user.getPassword() != null) {
+            existingUser.setPassword(user.getPassword());
+        }
+
+        return this.userRepository.save(existingUser);
     }
 
     @Override
     public void deleteUser(Long id) {
-        if (this.userRepository.existsById(id)) {
-            this.userRepository.deleteById(id);
-        }
+        User user = this.getUserById(id);
+        this.userRepository.delete(user);
     }
 
 }
