@@ -23,7 +23,6 @@ public class User {
     private String username;
 
     @Email(message = "Email is not valid", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
-    @NotBlank(message = "Email must not blank")
     @Column(unique = true)
     private String email;
 
