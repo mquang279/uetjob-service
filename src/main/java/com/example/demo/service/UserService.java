@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import java.util.List;
 
-import com.example.demo.dto.LoginDTO;
+import com.example.demo.dto.request.LoginDTO;
 import com.example.demo.entity.User;
 
 public interface UserService {

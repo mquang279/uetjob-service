@@ -5,11 +5,10 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.LoginDTO;
+import com.example.demo.dto.request.LoginDTO;
 import com.example.demo.entity.User;
 import com.example.demo.exception.EmailAlreadyExistsException;
 import com.example.demo.exception.UserIdNotValidException;
-import com.example.demo.exception.UsernameNotFoundException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 

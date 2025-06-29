@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 
@@ -30,33 +31,41 @@ public class UserController {
     }
 
     @PostMapping("")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<ApiResponse<User>> createUser(@RequestBody User user) {
         String hashPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(hashPassword);
+        ApiResponse<User> response = new ApiResponse<>(HttpStatus.CREATED, "Create user",
+                this.userService.createUser(user));
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(this.userService.createUser(user));
+                .body(response);
     }
 
     @GetMapping("")
-    public ResponseEntity<List<User>> getAllUser() {
+    public ResponseEntity<ApiResponse<List<User>>> getAllUser() {
+        ApiResponse<List<User>> response = new ApiResponse<>(HttpStatus.OK, "Get all users",
+                this.userService.getAllUser());
         return ResponseEntity.ok()
-                .body(this.userService.getAllUser());
+                .body(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<User>> getUserById(@PathVariable Long id) {
+        ApiResponse<User> response = new ApiResponse<>(HttpStatus.OK, "Get user with id " + id,
+                this.userService.getUserById(id));
         return ResponseEntity.ok()
-                .body(this.userService.getUserById(id));
+                .body(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+    public ResponseEntity<ApiResponse<User>> updateUser(@PathVariable Long id, @RequestBody User user) {
         if (user.getPassword() != null) {
             String hashPassword = this.passwordEncoder.encode(user.getPassword());
             user.setPassword(hashPassword);
         }
+        ApiResponse<User> response = new ApiResponse<>(HttpStatus.OK, "Update user with id " + id,
+                this.userService.updateUser(id, user));
         return ResponseEntity.ok()
-                .body(this.userService.updateUser(id, user));
+                .body(response);
     }
 
     @DeleteMapping("/{id}")
