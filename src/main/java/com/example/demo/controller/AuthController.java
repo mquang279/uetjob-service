@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,9 +38,11 @@ public class AuthController {
         // Validate authenticationToken
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         // If authenticationToken is valid, create JWT Token
         String token = this.securityService.createToken(authentication);
         ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "Login", token);
+
         return ResponseEntity.ok().body(response);
     }
 }

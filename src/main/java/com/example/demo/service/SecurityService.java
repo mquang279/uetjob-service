@@ -42,7 +42,7 @@ public class SecurityService {
 
         // Payload: Contain authentication information
         JwtClaimsSet claimsSet = JwtClaimsSet.builder().issuedAt(now).expiresAt(validity)
-                .subject(authentication.getName()).claim("data", authentication).build();
+                .subject(authentication.getName()).claim("user", authentication).build();
 
         // Header: Contain using signing algorithm
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
