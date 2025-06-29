@@ -29,7 +29,7 @@ public class GlobalException {
         public ResponseEntity<ErrorResponse> handleAuthenticationException(Exception e, WebRequest request) {
                 ErrorResponse errorResponse = new ErrorResponse(
                                 HttpStatus.UNAUTHORIZED.value(),
-                                "Unauthorized",
+                                "Authentication failed",
                                 "Invaid username or password",
                                 request.getDescription(false).replace("uri=", ""));
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
