@@ -29,9 +29,14 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<String>> login(@Valid @RequestBody LoginDTO loginDTO) {
+        // Generate authenticationToken from input username and password
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginDTO.getUsername(), loginDTO.getPassword());
+
+        // Validate authenticationToken
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        // If authenticationToken is valid, create JWT Token
         String token = this.securityService.createToken(authentication);
         ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "Login", token);
         return ResponseEntity.ok().body(response);

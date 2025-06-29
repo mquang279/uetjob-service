@@ -41,6 +41,8 @@ public class SecurityConfiguration {
                 (authz) -> authz
                         .requestMatchers("/", "/auth/login").permitAll()
                         .anyRequest().authenticated())
+                // Add BearerTokenAuthenticationFilter (auto extract token from header request
+                // and send to server)
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
@@ -48,8 +50,12 @@ public class SecurityConfiguration {
 
     @Bean
     public JwtDecoder jwtDecoder() {
+        // Define NimbusJwtEncoder with secret key and Signing algorithm
         NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(getSecretKey())
                 .macAlgorithm(SecurityService.JWT_ALGORITHM).build();
+
+        // JwtDecoder is a functional interface, so return a function with input is
+        // token and decode this token
         return (token) -> {
             try {
                 return jwtDecoder.decode(token);
