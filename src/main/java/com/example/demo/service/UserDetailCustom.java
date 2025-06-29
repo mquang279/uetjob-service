@@ -17,6 +17,7 @@ public class UserDetailCustom implements UserDetailsService {
         this.userService = userService;
     }
 
+    // Redefine how to get user by given username
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         com.example.demo.entity.User user = this.userService.getUserByEmail(username);
