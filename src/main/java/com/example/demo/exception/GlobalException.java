@@ -15,6 +15,17 @@ import jakarta.validation.ConstraintViolationException;
 
 @RestControllerAdvice
 public class GlobalException {
+        @ExceptionHandler(CompanyNotFoundException.class)
+        public ResponseEntity<ErrorResponse> handleCompanyNotFoundException(CompanyNotFoundException e,
+                        WebRequest request) {
+                ErrorResponse errorResponse = new ErrorResponse(
+                                HttpStatus.BAD_REQUEST.value(),
+                                "Bad Request",
+                                e.getMessage(),
+                                request.getDescription(false).replace("uri=", ""));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
+
         @ExceptionHandler(AccessDeniedException.class)
         public ResponseEntity<ErrorResponse> handleAccessDeniedException(Exception e, WebRequest request) {
                 ErrorResponse errorResponse = new ErrorResponse(
