@@ -3,6 +3,8 @@ package com.example.demo.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.request.LoginDTO;
@@ -30,8 +32,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUser() {
-        return this.userRepository.findAll();
+    public List<User> getAllUser(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        return this.userRepository.findAll(pageable).getContent();
     }
 
     @Override

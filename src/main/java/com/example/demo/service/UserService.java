@@ -9,7 +9,7 @@ public interface UserService {
 
     User createUser(User user);
 
-    List<User> getAllUser();
+    List<User> getAllUser(int page, int pageSize);
 
     User getUserById(Long id);
 
