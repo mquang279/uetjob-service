@@ -2,8 +2,6 @@ package com.example.demo.entity;
 
 import java.time.Instant;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.example.demo.service.SecurityService;
 import com.fasterxml.jackson.annotation.JsonFormat;

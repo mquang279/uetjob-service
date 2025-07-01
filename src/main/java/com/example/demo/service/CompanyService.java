@@ -1,14 +1,14 @@
 package com.example.demo.service;
 
 import java.util.List;
-import java.util.Optional;
 
+import com.example.demo.dto.response.PaginationResponse;
 import com.example.demo.entity.Company;
 
 public interface CompanyService {
     Company createCompany(Company company);
 
-    List<Company> getAllCompany();
+    PaginationResponse<Company> getAllCompany(int page, int pageSize);
 
     Company updateCompany(Long id, Company company);
 
