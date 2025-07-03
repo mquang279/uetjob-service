@@ -12,6 +12,8 @@ import com.example.demo.dto.response.UserDTO;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,7 +36,8 @@ public class UserController {
         }
 
         @PostMapping("")
-        public ResponseEntity<ApiResponse<RegistrationResponse>> createUser(@RequestBody RegistrationRequest user) {
+        public ResponseEntity<ApiResponse<RegistrationResponse>> createUser(
+                        @Valid @RequestBody RegistrationRequest user) {
                 String hashPassword = this.passwordEncoder.encode(user.getPassword());
                 user.setPassword(hashPassword);
                 ApiResponse<RegistrationResponse> response = new ApiResponse<>(HttpStatus.CREATED, "Create user",
