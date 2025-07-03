@@ -51,7 +51,8 @@ public class User {
     public User(RegistrationRequest userDTO) {
         this.setEmail(userDTO.getEmail());
         this.setUsername(userDTO.getUsername());
-        this.setPassword(userDTO.getPassword());;
+        this.setPassword(userDTO.getPassword());
+        ;
     }
 
     public User(String username, String email, String password, Integer age, Gender gender, String address,
@@ -69,18 +70,16 @@ public class User {
         this.updatedBy = updatedBy;
     }
 
-
-
     @PrePersist
     public void handleBeforeCreate() {
         this.setCreatedAt(Instant.now());
-        this.setCreatedBy(SecurityService.getCurrentUserLogin());
+        this.setCreatedBy(SecurityService.getCurrentUserEmailLogin());
     }
 
     @PreUpdate
     public void handleBeforeUpdate() {
         this.setUpdatedAt(Instant.now());
-        this.setUpdatedBy(SecurityService.getCurrentUserLogin());
+        this.setUpdatedBy(SecurityService.getCurrentUserEmailLogin());
     }
 
 }

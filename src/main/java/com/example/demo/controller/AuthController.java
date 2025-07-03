@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.request.LoginRequest;
 import com.example.demo.dto.response.ApiResponse;
+import com.example.demo.dto.response.LoginResponse;
+import com.example.demo.dto.response.UserDTO;
 import com.example.demo.service.SecurityService;
+import com.example.demo.service.UserService;
 
 import jakarta.validation.Valid;
 
@@ -22,14 +25,17 @@ import jakarta.validation.Valid;
 public class AuthController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final SecurityService securityService;
+    private final UserService userService;
 
-    public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder, SecurityService securityService) {
+    public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder, SecurityService securityService,
+            UserService userService) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.securityService = securityService;
+        this.userService = userService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<String>> login(@Valid @RequestBody LoginRequest loginDTO) {
+    public ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest loginDTO) {
         // Generate authenticationToken from input username and password
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginDTO.getUsername(), loginDTO.getPassword());
@@ -40,7 +46,14 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // If authenticationToken is valid, create JWT Token
         String token = this.securityService.createToken(authentication);
-        ApiResponse<String> response = new ApiResponse<>(HttpStatus.OK, "Login", token);
+
+        LoginResponse data = new LoginResponse();
+        data.setAccessToken(token);
+        String email = loginDTO.getUsername();
+        UserDTO userDTO = this.userService.convertToUserDTO(this.userService.getUserByEmail(email));
+        data.setUser(userDTO);
+
+        ApiResponse<LoginResponse> response = new ApiResponse<>(HttpStatus.OK, "User login", data);
 
         return ResponseEntity.ok().body(response);
     }

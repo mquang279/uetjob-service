@@ -13,6 +13,8 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.entity.User;
+
 @Service
 public class SecurityService {
     private final JwtEncoder jwtEncoder;
@@ -50,7 +52,7 @@ public class SecurityService {
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claimsSet)).getTokenValue();
     }
 
-    public static String getCurrentUserLogin() {
+    public static String getCurrentUserEmailLogin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();
     }
