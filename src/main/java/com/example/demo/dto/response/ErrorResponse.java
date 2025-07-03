@@ -1,6 +1,8 @@
 package com.example.demo.dto.response;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
@@ -10,10 +12,11 @@ public class ErrorResponse {
     private String error;
     private String message;
     private String path;
-    private LocalDateTime timestamp;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
+    private Instant timestamp;
 
     public ErrorResponse() {
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = Instant.now();
     }
 
     public ErrorResponse(int status, String error, String message, String path) {
@@ -21,7 +24,7 @@ public class ErrorResponse {
         this.error = error;
         this.message = message;
         this.path = path;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = Instant.now();
     }
 
 }

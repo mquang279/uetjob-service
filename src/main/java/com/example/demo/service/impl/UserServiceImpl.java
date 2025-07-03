@@ -1,11 +1,14 @@
 package com.example.demo.service.impl;
 
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.request.LoginDTO;
+import com.example.demo.dto.response.PaginationResponse;
 import com.example.demo.entity.User;
 import com.example.demo.exception.EmailAlreadyExistsException;
 import com.example.demo.exception.UserIdNotValidException;
@@ -22,7 +25,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-        // Check if email already exists
         if (this.userRepository.existsByEmail(user.getEmail())) {
             throw new EmailAlreadyExistsException(user.getEmail());
         }
@@ -30,8 +32,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUser() {
-        return this.userRepository.findAll();
+    public PaginationResponse<User> getAllUser(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<User> users = this.userRepository.findAll(pageable);
+        PaginationResponse<User> response = new PaginationResponse<>(users);
+        return response;
     }
 
     @Override
