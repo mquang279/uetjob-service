@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
-@RequestMapping("/companies")
+@RequestMapping("api/v1/companies")
 public class CompanyController {
     private final CompanyService companyService;
 

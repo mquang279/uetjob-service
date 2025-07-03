@@ -2,7 +2,6 @@ package com.example.demo.entity;
 
 import java.time.Instant;
 
-
 import com.example.demo.service.SecurityService;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -65,7 +64,7 @@ public class Company {
         this.createdBy = createdBy;
         this.updatedBy = updatedBy;
     }
-
+    
     @PrePersist
     public void handleBeforeCreate() {
         this.setCreatedAt(Instant.now());
