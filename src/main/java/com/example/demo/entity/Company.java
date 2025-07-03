@@ -64,7 +64,7 @@ public class Company {
         this.createdBy = createdBy;
         this.updatedBy = updatedBy;
     }
-    
+
     @PrePersist
     public void handleBeforeCreate() {
         this.setCreatedAt(Instant.now());
@@ -72,7 +72,7 @@ public class Company {
     }
 
     @PreUpdate
-    public void handleAfterCreate() {
+    public void handleBeforeUpdate() {
         this.setUpdatedAt(Instant.now());
         this.setUpdatedBy(SecurityService.getCurrentUserLogin());
     }

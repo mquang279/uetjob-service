@@ -46,7 +46,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(c -> c.disable()).authorizeHttpRequests(
                 (authz) -> authz
-                        .requestMatchers("/", "/auth/login").permitAll()
+                        .requestMatchers("/", "/api/v1/auth/login").permitAll()
                         .anyRequest().authenticated())
                 // Add BearerTokenAuthenticationFilter
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
