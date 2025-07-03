@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.request.LoginDTO;
+import com.example.demo.dto.request.LoginRequest;
 import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.service.SecurityService;
 
@@ -29,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<String>> login(@Valid @RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<ApiResponse<String>> login(@Valid @RequestBody LoginRequest loginDTO) {
         // Generate authenticationToken from input username and password
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginDTO.getUsername(), loginDTO.getPassword());

@@ -83,8 +83,8 @@ public class GlobalException {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
 
-        @ExceptionHandler(UserIdNotValidException.class)
-        public ResponseEntity<ErrorResponse> handleUserIdNotValidException(UserIdNotValidException e,
+        @ExceptionHandler(UserNotFoundException.class)
+        public ResponseEntity<ErrorResponse> handleUserIdNotValidException(UserNotFoundException e,
                         WebRequest request) {
                 ErrorResponse errorResponse = new ErrorResponse(
                                 HttpStatus.BAD_REQUEST.value(),

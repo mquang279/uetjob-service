@@ -8,7 +8,7 @@ import com.example.demo.entity.enums.Gender;
 import lombok.Data;
 
 @Data
-public class RegistrationResponseDTO {
+public class RegistrationResponse {
     private Long id;
     private String username;
     private String email;
@@ -17,7 +17,7 @@ public class RegistrationResponseDTO {
     private String address;
     private Instant createdAt;
 
-    public RegistrationResponseDTO(Long id, String username, String email, Integer age, Gender gender, String address,
+    public RegistrationResponse(Long id, String username, String email, Integer age, Gender gender, String address,
             Instant createdAt) {
         this.id = id;
         this.username = username;
@@ -28,7 +28,7 @@ public class RegistrationResponseDTO {
         this.createdAt = createdAt;
     }
 
-    public RegistrationResponseDTO(User user) {
+    public RegistrationResponse(User user) {
         this.setId(user.getId());
         this.setUsername(user.getUsername());
         this.setEmail(user.getEmail());

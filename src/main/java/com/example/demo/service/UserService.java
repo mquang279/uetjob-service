@@ -1,16 +1,17 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.request.LoginDTO;
-import com.example.demo.dto.request.RegistrationDTO;
+import com.example.demo.dto.request.LoginRequest;
+import com.example.demo.dto.request.RegistrationRequest;
 import com.example.demo.dto.response.PaginationResponse;
-import com.example.demo.dto.response.RegistrationResponseDTO;
+import com.example.demo.dto.response.RegistrationResponse;
+import com.example.demo.dto.response.UserDTO;
 import com.example.demo.entity.User;
 
 public interface UserService {
 
-    RegistrationResponseDTO createUser(RegistrationDTO userDTO);
+    RegistrationResponse createUser(RegistrationRequest userDTO);
 
-    PaginationResponse<User> getAllUser(int page, int pageSize);
+    PaginationResponse<UserDTO> getAllUser(int page, int pageSize);
 
     User getUserById(Long id);
 
@@ -20,5 +21,7 @@ public interface UserService {
 
     User getUserByEmail(String email);
 
-    LoginDTO userToLoginDTO(User user);
+    LoginRequest userToLoginDTO(User user);
+
+    UserDTO convertToUserDTO(User user);
 }

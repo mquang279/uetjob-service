@@ -7,13 +7,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.request.LoginDTO;
-import com.example.demo.dto.request.RegistrationDTO;
+import com.example.demo.dto.request.LoginRequest;
+import com.example.demo.dto.request.RegistrationRequest;
 import com.example.demo.dto.response.PaginationResponse;
-import com.example.demo.dto.response.RegistrationResponseDTO;
+import com.example.demo.dto.response.RegistrationResponse;
+import com.example.demo.dto.response.UserDTO;
 import com.example.demo.entity.User;
 import com.example.demo.exception.EmailAlreadyExistsException;
-import com.example.demo.exception.UserIdNotValidException;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 
@@ -26,27 +27,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public RegistrationResponseDTO createUser(RegistrationDTO userDTO) {
+    public RegistrationResponse createUser(RegistrationRequest userDTO) {
         if (this.userRepository.existsByEmail(userDTO.getEmail())) {
             throw new EmailAlreadyExistsException(userDTO.getEmail());
         }
         User user = new User(userDTO);
-        RegistrationResponseDTO response = new RegistrationResponseDTO(this.userRepository.save(user));
+        RegistrationResponse response = new RegistrationResponse(this.userRepository.save(user));
         return response;
     }
 
     @Override
-    public PaginationResponse<User> getAllUser(int page, int pageSize) {
+    public PaginationResponse<UserDTO> getAllUser(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<User> users = this.userRepository.findAll(pageable);
-        PaginationResponse<User> response = new PaginationResponse<>(users);
+        Page<UserDTO> userDTOs = users.map(this::convertToUserDTO);
+        PaginationResponse<UserDTO> response = new PaginationResponse<>(userDTOs);
         return response;
     }
 
     @Override
     public User getUserById(Long id) {
         Optional<User> userOptional = this.userRepository.findById(id);
-        return userOptional.orElseThrow(() -> new UserIdNotValidException(id));
+        return userOptional.orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @Override
@@ -81,13 +83,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public LoginDTO userToLoginDTO(User user) {
-        return new LoginDTO(user.getUsername(), user.getPassword());
+    public LoginRequest userToLoginDTO(User user) {
+        return new LoginRequest(user.getUsername(), user.getPassword());
     }
 
     @Override
     public User getUserByEmail(String email) {
         return this.userRepository.findByEmail(email);
+    }
+
+    @Override
+    public UserDTO convertToUserDTO(User user) {
+        UserDTO userDTO = new UserDTO();
+
+        userDTO.setAddress(user.getAddress());
+        userDTO.setAge(user.getAge());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setGender(user.getGender());
+        userDTO.setId(user.getId());
+        userDTO.setUpdatedAt(user.getUpdatedAt());
+        userDTO.setCreatedAt(user.getCreatedAt());
+        userDTO.setUsername(user.getUsername());
+
+        return userDTO;
     }
 
 }

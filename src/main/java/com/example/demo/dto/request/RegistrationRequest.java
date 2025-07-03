@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class RegistrationDTO {
+public class RegistrationRequest {
 
     @NotBlank(message = "Username cannot be blank")
     private String username;
@@ -17,10 +17,10 @@ public class RegistrationDTO {
     @NotBlank(message = "Confirm password cannot be blank")
     private String password;
 
-    public RegistrationDTO() {
+    public RegistrationRequest() {
     }
 
-    public RegistrationDTO(String username, String email, String password) {
+    public RegistrationRequest(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;

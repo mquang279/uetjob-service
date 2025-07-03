@@ -2,7 +2,7 @@ package com.example.demo.entity;
 
 import java.time.Instant;
 
-import com.example.demo.dto.request.RegistrationDTO;
+import com.example.demo.dto.request.RegistrationRequest;
 import com.example.demo.entity.enums.Gender;
 import com.example.demo.service.SecurityService;
 
@@ -48,7 +48,7 @@ public class User {
 
     }
 
-    public User(RegistrationDTO userDTO) {
+    public User(RegistrationRequest userDTO) {
         this.setEmail(userDTO.getEmail());
         this.setUsername(userDTO.getUsername());
         this.setPassword(userDTO.getPassword());;
