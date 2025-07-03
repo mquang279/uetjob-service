@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import java.time.Instant;
 
+import com.example.demo.dto.request.RegistrationDTO;
 import com.example.demo.entity.enums.Gender;
 import com.example.demo.service.SecurityService;
 
@@ -47,7 +48,11 @@ public class User {
 
     }
 
-    
+    public User(RegistrationDTO userDTO) {
+        this.setEmail(userDTO.getEmail());
+        this.setUsername(userDTO.getUsername());
+        this.setPassword(userDTO.getPassword());;
+    }
 
     public User(String username, String email, String password, Integer age, Gender gender, String address,
             String refreshToken, Instant createdAt, Instant updatedAt, String createdBy, String updatedBy) {
@@ -77,4 +82,5 @@ public class User {
         this.setUpdatedAt(Instant.now());
         this.setUpdatedBy(SecurityService.getCurrentUserLogin());
     }
+
 }

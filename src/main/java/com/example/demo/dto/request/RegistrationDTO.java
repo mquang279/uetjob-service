@@ -17,16 +17,12 @@ public class RegistrationDTO {
     @NotBlank(message = "Confirm password cannot be blank")
     private String password;
 
-    @NotBlank(message = "Confirm password cannot be blank")
-    private String confirmPassword;
-
     public RegistrationDTO() {
     }
 
-    public RegistrationDTO(String username, String email, String password, String confirmPassword) {
+    public RegistrationDTO(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.confirmPassword = confirmPassword;
     }
 }

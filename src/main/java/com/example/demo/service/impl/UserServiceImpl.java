@@ -8,7 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.request.LoginDTO;
+import com.example.demo.dto.request.RegistrationDTO;
 import com.example.demo.dto.response.PaginationResponse;
+import com.example.demo.dto.response.RegistrationResponseDTO;
 import com.example.demo.entity.User;
 import com.example.demo.exception.EmailAlreadyExistsException;
 import com.example.demo.exception.UserIdNotValidException;
@@ -24,11 +26,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(User user) {
-        if (this.userRepository.existsByEmail(user.getEmail())) {
-            throw new EmailAlreadyExistsException(user.getEmail());
+    public RegistrationResponseDTO createUser(RegistrationDTO userDTO) {
+        if (this.userRepository.existsByEmail(userDTO.getEmail())) {
+            throw new EmailAlreadyExistsException(userDTO.getEmail());
         }
-        return this.userRepository.save(user);
+        User user = new User(userDTO);
+        RegistrationResponseDTO response = new RegistrationResponseDTO(this.userRepository.save(user));
+        return response;
     }
 
     @Override

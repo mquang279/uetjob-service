@@ -4,8 +4,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.request.RegistrationDTO;
 import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.dto.response.PaginationResponse;
+import com.example.demo.dto.response.RegistrationResponseDTO;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 
@@ -31,10 +33,10 @@ public class UserController {
         }
 
         @PostMapping("")
-        public ResponseEntity<ApiResponse<User>> createUser(@RequestBody User user) {
+        public ResponseEntity<ApiResponse<RegistrationResponseDTO>> createUser(@RequestBody RegistrationDTO user) {
                 String hashPassword = this.passwordEncoder.encode(user.getPassword());
                 user.setPassword(hashPassword);
-                ApiResponse<User> response = new ApiResponse<>(HttpStatus.CREATED, "Create user",
+                ApiResponse<RegistrationResponseDTO> response = new ApiResponse<>(HttpStatus.CREATED, "Create user",
                                 this.userService.createUser(user));
                 return ResponseEntity.status(HttpStatus.CREATED)
                                 .body(response);
