@@ -26,4 +26,8 @@ public interface UserService {
     UserDTO convertToUserDTO(User user);
 
     void updateUserRefreshToken(Long id, String refreshToken);
+
+    User getUserByRefreshTokenAndEmail(String refreshToken, String email);
+
+    User clearRefreshToken(String email);
 }

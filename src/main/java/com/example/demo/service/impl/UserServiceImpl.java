@@ -14,6 +14,7 @@ import com.example.demo.dto.response.RegistrationResponse;
 import com.example.demo.dto.response.UserDTO;
 import com.example.demo.entity.User;
 import com.example.demo.exception.EmailAlreadyExistsException;
+import com.example.demo.exception.RefreshTokenAndEmailNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
@@ -111,6 +112,22 @@ public class UserServiceImpl implements UserService {
         User user = this.getUserById(id);
         user.setRefreshToken(refreshToken);
         this.userRepository.save(user);
+    }
+
+    @Override
+    public User getUserByRefreshTokenAndEmail(String refreshToken, String email) {
+        User user = this.userRepository.findByRefreshTokenAndEmail(refreshToken, email);
+        if (user == null) {
+            throw new RefreshTokenAndEmailNotFoundException();
+        }
+        return user;
+    }
+
+    @Override
+    public User clearRefreshToken(String email) {
+        User user = this.getUserByEmail(email);
+        user.setRefreshToken(null);
+        return this.userRepository.save(user);
     }
 
 }
