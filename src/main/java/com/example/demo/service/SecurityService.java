@@ -14,6 +14,8 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.response.LoginResponse;
+import com.example.demo.dto.response.UserClaims;
+import com.example.demo.dto.response.UserDTO;
 
 @Service
 public class SecurityService {
@@ -38,16 +40,17 @@ public class SecurityService {
      * @param authentication Authentication information of user
      * @return JWT Token
      */
-    public String createAccessToken(Authentication authentication) {
+    public String createAccessToken(Authentication authentication, UserDTO userDTO) {
         Instant now = Instant.now();
         Instant validity = now.plus(this.accessTokenExpiration, ChronoUnit.SECONDS);
 
         // Payload: Contain authentication information
+        UserClaims userClaims = new UserClaims(userDTO);
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(authentication.getName())
-                .claim("user", authentication)
+                .claim("user", userClaims)
                 .build();
 
         // Header: Contain using signing algorithm
@@ -58,20 +61,17 @@ public class SecurityService {
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claimsSet)).getTokenValue();
     }
 
-    public String createRefreshToken(String email, LoginResponse loginDTO) {
+    public String createRefreshToken(String email, UserDTO userDTO) {
         Instant now = Instant.now();
         Instant validity = now.plus(this.refreshTokenExpiration, ChronoUnit.SECONDS);
 
         // Payload: Contain authentication information
-        // Only include basic user info to avoid serialization issues with Instant
-        // fields
+        UserClaims userClaims = new UserClaims(userDTO);
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(email)
-                .claim("userId", loginDTO.getUser().getId())
-                .claim("username", loginDTO.getUser().getUsername())
-                .claim("email", loginDTO.getUser().getEmail())
+                .claim("user", userClaims)
                 .build();
 
         // Header: Contain using signing algorithm

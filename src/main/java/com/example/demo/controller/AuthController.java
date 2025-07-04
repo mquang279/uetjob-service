@@ -18,10 +18,12 @@ import com.example.demo.dto.request.LoginRequest;
 import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.dto.response.LoginResponse;
 import com.example.demo.dto.response.UserDTO;
+import com.example.demo.entity.User;
 import com.example.demo.service.SecurityService;
 import com.example.demo.service.UserService;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("api/v1/auth")
@@ -51,18 +53,18 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // If authenticationToken is valid, create JWT Access Token
-        String accessToken = this.securityService.createAccessToken(authentication);
 
         // Format response
         LoginResponse data = new LoginResponse();
-        data.setAccessToken(accessToken);
         String email = loginDTO.getUsername();
         UserDTO userDTO = this.userService.convertToUserDTO(this.userService.getUserByEmail(email));
         data.setUser(userDTO);
+        String accessToken = this.securityService.createAccessToken(authentication, userDTO);
+        data.setAccessToken(accessToken);
         ApiResponse<LoginResponse> response = new ApiResponse<>(HttpStatus.OK, "User login", data);
 
         // Create JWT Refresh Token and store to database
-        String refreshToken = this.securityService.createRefreshToken(email, data);
+        String refreshToken = this.securityService.createRefreshToken(email, userDTO);
         System.out.println(refreshToken);
         this.userService.updateUserRefreshToken(userDTO.getId(), refreshToken);
 
@@ -79,4 +81,14 @@ public class AuthController {
                 .header(HttpHeaders.SET_COOKIE, cookies.toString())
                 .body(response);
     }
+
+    @GetMapping("/account")
+    public ResponseEntity<ApiResponse<UserDTO>> getUserInformation() {
+        String email = SecurityService.getCurrentUserEmailLogin();
+        User user = this.userService.getUserByEmail(email);
+        ApiResponse<UserDTO> response = new ApiResponse<>(HttpStatus.OK, "Get user information",
+                this.userService.convertToUserDTO(user));
+        return ResponseEntity.ok().body(response);
+    }
+
 }
