@@ -1,6 +1,9 @@
 package com.example.demo.controller;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -27,6 +30,9 @@ public class AuthController {
     private final SecurityService securityService;
     private final UserService userService;
 
+    @Value("${refresh.token.expiration.time}")
+    private long refreshTokenExpiration;
+
     public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder, SecurityService securityService,
             UserService userService) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
@@ -44,17 +50,33 @@ public class AuthController {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        // If authenticationToken is valid, create JWT Token
-        String token = this.securityService.createToken(authentication);
+        // If authenticationToken is valid, create JWT Access Token
+        String accessToken = this.securityService.createAccessToken(authentication);
 
+        // Format response
         LoginResponse data = new LoginResponse();
-        data.setAccessToken(token);
+        data.setAccessToken(accessToken);
         String email = loginDTO.getUsername();
         UserDTO userDTO = this.userService.convertToUserDTO(this.userService.getUserByEmail(email));
         data.setUser(userDTO);
-
         ApiResponse<LoginResponse> response = new ApiResponse<>(HttpStatus.OK, "User login", data);
 
-        return ResponseEntity.ok().body(response);
+        // Create JWT Refresh Token and store to database
+        String refreshToken = this.securityService.createRefreshToken(email, data);
+        System.out.println(refreshToken);
+        this.userService.updateUserRefreshToken(userDTO.getId(), refreshToken);
+
+        // Create Cookies
+        ResponseCookie cookies = ResponseCookie
+                .from("refresh_token", refreshToken)
+                .path("/")
+                .maxAge(refreshTokenExpiration)
+                .secure(true)
+                .httpOnly(true)
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookies.toString())
+                .body(response);
     }
 }

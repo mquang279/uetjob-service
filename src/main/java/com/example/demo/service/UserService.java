@@ -24,4 +24,6 @@ public interface UserService {
     LoginRequest userToLoginDTO(User user);
 
     UserDTO convertToUserDTO(User user);
+
+    void updateUserRefreshToken(Long id, String refreshToken);
 }

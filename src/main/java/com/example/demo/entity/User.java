@@ -38,6 +38,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Gender gender;
     private String address;
+    @Column(length = 1000)
     private String refreshToken;
     private Instant createdAt;
     private Instant updatedAt;

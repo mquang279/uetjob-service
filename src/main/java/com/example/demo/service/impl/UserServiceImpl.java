@@ -108,4 +108,11 @@ public class UserServiceImpl implements UserService {
         return userDTO;
     }
 
+    @Override
+    public void updateUserRefreshToken(Long id, String refreshToken) {
+        User user = this.getUserById(id);
+        user.setRefreshToken(refreshToken);
+        this.userRepository.save(user);
+    }
+
 }

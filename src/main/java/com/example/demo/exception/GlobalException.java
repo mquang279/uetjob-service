@@ -110,7 +110,7 @@ public class GlobalException {
                 ErrorResponse errorResponse = new ErrorResponse(
                                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                                 "Internal Server Error",
-                                "An unexpected error occurred",
+                                e.getMessage(),
                                 request.getDescription(false).replace("uri=", ""));
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
