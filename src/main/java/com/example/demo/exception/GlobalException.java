@@ -83,8 +83,8 @@ public class GlobalException {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
 
-        @ExceptionHandler(UserIdNotValidException.class)
-        public ResponseEntity<ErrorResponse> handleUserIdNotValidException(UserIdNotValidException e,
+        @ExceptionHandler(UserNotFoundException.class)
+        public ResponseEntity<ErrorResponse> handleUserIdNotValidException(UserNotFoundException e,
                         WebRequest request) {
                 ErrorResponse errorResponse = new ErrorResponse(
                                 HttpStatus.BAD_REQUEST.value(),
@@ -110,7 +110,7 @@ public class GlobalException {
                 ErrorResponse errorResponse = new ErrorResponse(
                                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                                 "Internal Server Error",
-                                "An unexpected error occurred",
+                                e.getMessage(),
                                 request.getDescription(false).replace("uri=", ""));
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }

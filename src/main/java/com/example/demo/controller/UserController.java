@@ -4,10 +4,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.request.RegistrationRequest;
 import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.dto.response.PaginationResponse;
+import com.example.demo.dto.response.RegistrationResponse;
+import com.example.demo.dto.response.UserDTO;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
+
+import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,41 +36,43 @@ public class UserController {
         }
 
         @PostMapping("")
-        public ResponseEntity<ApiResponse<User>> createUser(@RequestBody User user) {
+        public ResponseEntity<ApiResponse<RegistrationResponse>> createUser(
+                        @Valid @RequestBody RegistrationRequest user) {
                 String hashPassword = this.passwordEncoder.encode(user.getPassword());
                 user.setPassword(hashPassword);
-                ApiResponse<User> response = new ApiResponse<>(HttpStatus.CREATED, "Create user",
+                ApiResponse<RegistrationResponse> response = new ApiResponse<>(HttpStatus.CREATED, "Create user",
                                 this.userService.createUser(user));
                 return ResponseEntity.status(HttpStatus.CREATED)
                                 .body(response);
         }
 
         @GetMapping("")
-        public ResponseEntity<ApiResponse<PaginationResponse<User>>> getAllUser(
+        public ResponseEntity<ApiResponse<PaginationResponse<UserDTO>>> getAllUser(
                         @RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "15") int pageSize) {
-                ApiResponse<PaginationResponse<User>> response = new ApiResponse<>(HttpStatus.OK, "Get all users",
+                ApiResponse<PaginationResponse<UserDTO>> response = new ApiResponse<>(HttpStatus.OK, "Get all users",
                                 this.userService.getAllUser(page, pageSize));
                 return ResponseEntity.ok()
                                 .body(response);
         }
 
         @GetMapping("/{id}")
-        public ResponseEntity<ApiResponse<User>> getUserById(@PathVariable Long id) {
-                ApiResponse<User> response = new ApiResponse<>(HttpStatus.OK, "Get user with id " + id,
-                                this.userService.getUserById(id));
+        public ResponseEntity<ApiResponse<UserDTO>> getUserById(@PathVariable Long id) {
+                UserDTO userDTO = this.userService.convertToUserDTO(this.userService.getUserById(id));
+                ApiResponse<UserDTO> response = new ApiResponse<>(HttpStatus.OK, "Get user with id " + id,
+                                userDTO);
                 return ResponseEntity.ok()
                                 .body(response);
         }
 
         @PutMapping("/{id}")
-        public ResponseEntity<ApiResponse<User>> updateUser(@PathVariable Long id, @RequestBody User user) {
+        public ResponseEntity<ApiResponse<UserDTO>> updateUser(@PathVariable Long id, @RequestBody User user) {
                 if (user.getPassword() != null) {
                         String hashPassword = this.passwordEncoder.encode(user.getPassword());
                         user.setPassword(hashPassword);
                 }
-                ApiResponse<User> response = new ApiResponse<>(HttpStatus.OK, "Update user with id " + id,
-                                this.userService.updateUser(id, user));
+                UserDTO userDTO = this.userService.convertToUserDTO(this.userService.updateUser(id, user));
+                ApiResponse<UserDTO> response = new ApiResponse<>(HttpStatus.OK, "Update user with id " + id, userDTO);
                 return ResponseEntity.ok()
                                 .body(response);
         }

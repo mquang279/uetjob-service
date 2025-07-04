@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class LoginDTO {
+public class LoginRequest {
 
     @Email(message = "Email is not valid", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
     private String username;
@@ -13,10 +13,10 @@ public class LoginDTO {
     @NotBlank(message = "Password must not blank")
     private String password;
 
-    public LoginDTO() {
+    public LoginRequest() {
     }
 
-    public LoginDTO(String username, String password) {
+    public LoginRequest(String username, String password) {
         this.username = username;
         this.password = password;
     }
