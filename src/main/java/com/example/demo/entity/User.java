@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import java.time.Instant;
+import java.util.List;
 
 import com.example.demo.dto.request.RegistrationRequest;
 import com.example.demo.entity.enums.Gender;
@@ -13,6 +14,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -44,6 +46,9 @@ public class User {
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
+
+    @OneToMany(mappedBy = "user")
+    private List<CompanyReview> reviews;
 
     public User() {
 

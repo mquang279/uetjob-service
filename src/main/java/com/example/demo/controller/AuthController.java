@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +32,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("api/v1/auth")
 public class AuthController {
 
-        private final UserController userController;
         private final AuthenticationManagerBuilder authenticationManagerBuilder;
         private final SecurityService securityService;
         private final UserService userService;
@@ -43,12 +41,10 @@ public class AuthController {
 
         public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder,
                         SecurityService securityService,
-                        UserService userService,
-                        UserController userController) {
+                        UserService userService) {
                 this.authenticationManagerBuilder = authenticationManagerBuilder;
                 this.securityService = securityService;
                 this.userService = userService;
-                this.userController = userController;
         }
 
         @PostMapping("/login")
