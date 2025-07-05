@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.dto.response.PaginationResponse;
 import com.example.demo.entity.Company;
 import com.example.demo.service.CompanyService;
@@ -30,33 +29,29 @@ public class CompanyController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ApiResponse<PaginationResponse<Company>>> getAllCompanies(
+    public ResponseEntity<PaginationResponse<Company>> getAllCompanies(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "15") int pageSize) {
-        ApiResponse<PaginationResponse<Company>> response = new ApiResponse<>(HttpStatus.OK, "Get all companies",
-                this.companyService.getAllCompany(page, pageSize));
-        return ResponseEntity.ok().body(response);
+        PaginationResponse<Company> data = this.companyService.getAllCompany(page, pageSize);
+        return ResponseEntity.ok().body(data);
     }
 
     @PostMapping("")
-    public ResponseEntity<ApiResponse<Company>> createCompany(@Valid @RequestBody Company company) {
-        ApiResponse<Company> response = new ApiResponse<>(HttpStatus.OK, "Create company",
-                this.companyService.createCompany(company));
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<Company> createCompany(@Valid @RequestBody Company company) {
+        Company data = this.companyService.createCompany(company);
+        return ResponseEntity.status(HttpStatus.CREATED).body(data);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Company>> getCompanyById(@PathVariable Long id) {
-        ApiResponse<Company> response = new ApiResponse<>(HttpStatus.OK, "Get company with id " + id,
-                this.companyService.getCompanyById(id));
-        return ResponseEntity.ok().body(response);
+    public ResponseEntity<Company> getCompanyById(@PathVariable Long id) {
+        Company data = this.companyService.getCompanyById(id);
+        return ResponseEntity.ok().body(data);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Company>> updateCompany(@PathVariable Long id, @RequestBody Company company) {
-        ApiResponse<Company> response = new ApiResponse<>(HttpStatus.OK, "Update company with id " + id,
-                this.companyService.updateCompany(id, company));
-        return ResponseEntity.ok().body(response);
+    public ResponseEntity<Company> updateCompany(@PathVariable Long id, @RequestBody Company company) {
+        Company data = this.companyService.updateCompany(id, company);
+        return ResponseEntity.ok().body(data);
     }
 
     @DeleteMapping("/{id}")

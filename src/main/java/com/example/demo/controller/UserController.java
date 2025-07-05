@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.request.RegistrationRequest;
-import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.dto.response.PaginationResponse;
 import com.example.demo.dto.response.RegistrationResponse;
 import com.example.demo.dto.response.UserDTO;
@@ -36,45 +35,36 @@ public class UserController {
         }
 
         @PostMapping("")
-        public ResponseEntity<ApiResponse<RegistrationResponse>> createUser(
+        public ResponseEntity<RegistrationResponse> createUser(
                         @Valid @RequestBody RegistrationRequest user) {
                 String hashPassword = this.passwordEncoder.encode(user.getPassword());
                 user.setPassword(hashPassword);
-                ApiResponse<RegistrationResponse> response = new ApiResponse<>(HttpStatus.CREATED, "Create user",
-                                this.userService.createUser(user));
-                return ResponseEntity.status(HttpStatus.CREATED)
-                                .body(response);
+                RegistrationResponse data = this.userService.createUser(user);
+                return ResponseEntity.status(HttpStatus.CREATED).body(data);
         }
 
         @GetMapping("")
-        public ResponseEntity<ApiResponse<PaginationResponse<UserDTO>>> getAllUser(
+        public ResponseEntity<PaginationResponse<UserDTO>> getAllUser(
                         @RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "15") int pageSize) {
-                ApiResponse<PaginationResponse<UserDTO>> response = new ApiResponse<>(HttpStatus.OK, "Get all users",
-                                this.userService.getAllUser(page, pageSize));
-                return ResponseEntity.ok()
-                                .body(response);
+                PaginationResponse<UserDTO> data = this.userService.getAllUser(page, pageSize);
+                return ResponseEntity.ok().body(data);
         }
 
         @GetMapping("/{id}")
-        public ResponseEntity<ApiResponse<UserDTO>> getUserById(@PathVariable Long id) {
+        public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
                 UserDTO userDTO = this.userService.convertToUserDTO(this.userService.getUserById(id));
-                ApiResponse<UserDTO> response = new ApiResponse<>(HttpStatus.OK, "Get user with id " + id,
-                                userDTO);
-                return ResponseEntity.ok()
-                                .body(response);
+                return ResponseEntity.ok().body(userDTO);
         }
 
         @PutMapping("/{id}")
-        public ResponseEntity<ApiResponse<UserDTO>> updateUser(@PathVariable Long id, @RequestBody User user) {
+        public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody User user) {
                 if (user.getPassword() != null) {
                         String hashPassword = this.passwordEncoder.encode(user.getPassword());
                         user.setPassword(hashPassword);
                 }
                 UserDTO userDTO = this.userService.convertToUserDTO(this.userService.updateUser(id, user));
-                ApiResponse<UserDTO> response = new ApiResponse<>(HttpStatus.OK, "Update user with id " + id, userDTO);
-                return ResponseEntity.ok()
-                                .body(response);
+                return ResponseEntity.ok().body(userDTO);
         }
 
         @DeleteMapping("/{id}")

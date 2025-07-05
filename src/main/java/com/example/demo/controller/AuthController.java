@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.request.LoginRequest;
-import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.dto.response.LoginResponse;
 import com.example.demo.dto.response.UserDTO;
 import com.example.demo.entity.User;
@@ -48,7 +46,7 @@ public class AuthController {
         }
 
         @PostMapping("/login")
-        public ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest loginDTO) {
+        public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginDTO) {
                 // Generate authenticationToken from input username and password
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                                 loginDTO.getUsername(), loginDTO.getPassword());
@@ -66,7 +64,6 @@ public class AuthController {
                 // Create JWT Access Token
                 String accessToken = this.securityService.createAccessToken(email, userDTO);
                 data.setAccessToken(accessToken);
-                ApiResponse<LoginResponse> response = new ApiResponse<>(HttpStatus.OK, "User login", data);
 
                 // Create JWT Refresh Token and store to database
                 String refreshToken = this.securityService.createRefreshToken(email, userDTO);
@@ -83,20 +80,18 @@ public class AuthController {
 
                 return ResponseEntity.ok()
                                 .header(HttpHeaders.SET_COOKIE, cookies.toString())
-                                .body(response);
+                                .body(data);
         }
 
         @GetMapping("/account")
-        public ResponseEntity<ApiResponse<UserDTO>> getUserInformation() {
+        public ResponseEntity<UserDTO> getUserInformation() {
                 String email = SecurityService.getCurrentUserEmailLogin();
                 User user = this.userService.getUserByEmail(email);
-                ApiResponse<UserDTO> response = new ApiResponse<>(HttpStatus.OK, "Get user information",
-                                this.userService.convertToUserDTO(user));
-                return ResponseEntity.ok().body(response);
+                return ResponseEntity.ok().body(this.userService.convertToUserDTO(user));
         }
 
         @GetMapping("/refresh")
-        public ResponseEntity<ApiResponse<LoginResponse>> getAccessToken(
+        public ResponseEntity<LoginResponse> getAccessToken(
                         @CookieValue(name = "refresh_token") String refreshToken) {
                 // Check if refresh token is valid or not, if not valid throw an exception
                 Jwt decodedJwt = this.securityService.checkValidRefreshToken(refreshToken);
@@ -110,7 +105,6 @@ public class AuthController {
                 // Create JWT Access Token
                 String accessToken = this.securityService.createAccessToken(email, userDTO);
                 data.setAccessToken(accessToken);
-                ApiResponse<LoginResponse> response = new ApiResponse<>(HttpStatus.OK, "User login", data);
 
                 // Create new JWT Refresh Token and Store to database
                 String newRefreshToken = this.securityService.createRefreshToken(email, userDTO);
@@ -127,7 +121,7 @@ public class AuthController {
 
                 return ResponseEntity.ok()
                                 .header(HttpHeaders.SET_COOKIE, cookies.toString())
-                                .body(response);
+                                .body(data);
         }
 
         @PostMapping("/logout")
