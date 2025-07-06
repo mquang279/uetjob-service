@@ -103,6 +103,7 @@ public class UserServiceImpl implements UserService {
         userDTO.setGender(user.getGender());
         userDTO.setId(user.getId());
         userDTO.setUsername(user.getUsername());
+        userDTO.setReviews(user.getReviews());
 
         return userDTO;
     }
