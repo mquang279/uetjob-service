@@ -15,4 +15,5 @@ public interface CompanyReviewRepository extends JpaRepository<CompanyReview, Lo
 
     @Query(value = "select * from company_review c where c.user_id = :id", nativeQuery = true)
     List<CompanyReview> findByUserId(long id);
+
 }

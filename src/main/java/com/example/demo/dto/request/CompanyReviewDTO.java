@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class CreateCompanyReviewRequest {
+public class CompanyReviewDTO {
     @NotBlank(message = "Title is required")
     @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
     private String title;
@@ -20,5 +20,5 @@ public class CreateCompanyReviewRequest {
     @NotNull(message = "Rating is required")
     @Min(value = 1, message = "Rating must be at least 1")
     @Max(value = 5, message = "Rating must be at most 5")
-    private int rating;
+    private Integer rating;
 }

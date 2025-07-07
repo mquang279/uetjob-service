@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.request.CreateCompanyReviewRequest;
+import com.example.demo.dto.request.CompanyReviewDTO;
 import com.example.demo.entity.CompanyReview;
 import com.example.demo.service.CompanyReviewService;
 
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -27,7 +28,7 @@ public class CompanyReviewController {
 
     @PostMapping("/companies/{id}/reviews")
     public ResponseEntity<CompanyReview> createReview(@PathVariable Long id,
-            @RequestBody CreateCompanyReviewRequest request) {
+            @RequestBody CompanyReviewDTO request) {
         CompanyReview data = this.companyReviewService.createReview(id, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(data);
     }
@@ -42,5 +43,12 @@ public class CompanyReviewController {
     public ResponseEntity<List<CompanyReview>> getAllUserReviews(@PathVariable Long id) {
         List<CompanyReview> reviews = this.companyReviewService.getReviewsByUserId(id);
         return ResponseEntity.ok().body(reviews);
+    }
+
+    @PutMapping("companies/{companyId}/reviews/{reviewId}")
+    public ResponseEntity<CompanyReview> updateCompanyReview(@PathVariable Long companyId, @PathVariable Long reviewId,
+            @RequestBody CompanyReviewDTO reviewDTO) {
+        CompanyReview review = this.companyReviewService.updateReview(companyId, reviewId, reviewDTO);
+        return ResponseEntity.ok().body(review);
     }
 }

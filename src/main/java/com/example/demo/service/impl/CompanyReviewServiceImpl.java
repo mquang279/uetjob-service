@@ -1,13 +1,16 @@
 package com.example.demo.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.request.CreateCompanyReviewRequest;
+import com.example.demo.dto.request.CompanyReviewDTO;
 import com.example.demo.entity.Company;
 import com.example.demo.entity.CompanyReview;
 import com.example.demo.entity.User;
+import com.example.demo.exception.CompanyReviewNotFoundException;
 import com.example.demo.repository.CompanyReviewRepository;
 import com.example.demo.service.CompanyReviewService;
 import com.example.demo.service.CompanyService;
@@ -40,13 +43,52 @@ public class CompanyReviewServiceImpl implements CompanyReviewService {
     }
 
     @Override
-    public CompanyReview createReview(Long id, CreateCompanyReviewRequest request) {
+    public CompanyReview createReview(Long id, CompanyReviewDTO request) {
         String userEmail = SecurityService.getCurrentUserEmailLogin();
         User user = this.userService.getUserByEmail(userEmail);
         Company company = this.companyService.getCompanyById(id);
         CompanyReview review = new CompanyReview(request.getTitle(), request.getDescription(), request.getRating(),
                 user, company);
         return this.companyReviewRepository.save(review);
+    }
+
+    @Override
+    public CompanyReview updateReview(Long companyId, Long reviewId, CompanyReviewDTO reviewDTO) {
+        CompanyReview review = this.getReviewById(reviewId);
+        validateReviewBelongToCompany(companyId, review);
+        validateReviewBelongToUser(review);
+        if (reviewDTO.getDescription() != null) {
+            review.setDescription(reviewDTO.getDescription());
+        }
+        if (reviewDTO.getTitle() != null) {
+            review.setTitle(reviewDTO.getTitle());
+        }
+        if (reviewDTO.getRating() != null) {
+            review.setRating(reviewDTO.getRating());
+        }
+        return this.companyReviewRepository.save(review);
+    }
+
+    @Override
+    public CompanyReview getReviewById(Long id) {
+        Optional<CompanyReview> review = this.companyReviewRepository.findById(id);
+        return review.orElseThrow(() -> new CompanyReviewNotFoundException(id));
+    }
+
+    @Override
+    public void validateReviewBelongToUser(CompanyReview review) {
+        String userEmail = review.getUser().getEmail();
+        if (!userEmail.equals(SecurityService.getCurrentUserEmailLogin())) {
+            throw new IllegalArgumentException("Review with id " + review.getId() + " does not belong to this user.");
+        }
+    }
+
+    @Override
+    public void validateReviewBelongToCompany(Long companyId, CompanyReview review) {
+        if (review.getCompany().getId() != companyId) {
+            throw new IllegalArgumentException(
+                    "Review with id " + review.getId() + " does not belong to this company.");
+        }
     }
 
 }
