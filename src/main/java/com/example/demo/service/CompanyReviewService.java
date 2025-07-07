@@ -16,6 +16,8 @@ public interface CompanyReviewService {
 
     CompanyReview getReviewById(Long id);
 
+    void deleteReview(Long companyId, Long reviewId);
+
     void validateReviewBelongToUser(CompanyReview review);
 
     void validateReviewBelongToCompany(Long companyId, CompanyReview review);

@@ -3,7 +3,6 @@ package com.example.demo.service.impl;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.request.CompanyReviewDTO;
@@ -89,6 +88,14 @@ public class CompanyReviewServiceImpl implements CompanyReviewService {
             throw new IllegalArgumentException(
                     "Review with id " + review.getId() + " does not belong to this company.");
         }
+    }
+
+    @Override
+    public void deleteReview(Long companyId, Long reviewId) {
+        CompanyReview review = this.getReviewById(reviewId);
+        validateReviewBelongToUser(review);
+        validateReviewBelongToCompany(companyId, review);
+        this.companyReviewRepository.delete(review);
     }
 
 }

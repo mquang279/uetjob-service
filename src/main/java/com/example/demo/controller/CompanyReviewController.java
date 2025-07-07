@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,5 +51,11 @@ public class CompanyReviewController {
             @RequestBody CompanyReviewDTO reviewDTO) {
         CompanyReview review = this.companyReviewService.updateReview(companyId, reviewId, reviewDTO);
         return ResponseEntity.ok().body(review);
+    }
+
+    @DeleteMapping("companies/{companyId}/reviews/{reviewId}")
+    public ResponseEntity<Void> deleteCompanyReview(@PathVariable Long companyId, @PathVariable Long reviewId) {
+        this.companyReviewService.deleteReview(companyId, reviewId);
+        return ResponseEntity.noContent().build();
     }
 }

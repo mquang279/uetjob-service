@@ -4,13 +4,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.response.PaginationResponse;
 import com.example.demo.entity.Company;
-import com.example.demo.entity.CompanyReview;
-import com.example.demo.service.CompanyReviewService;
 import com.example.demo.service.CompanyService;
 
 import jakarta.validation.Valid;
-
-import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +23,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequestMapping("api/v1/companies")
 public class CompanyController {
     private final CompanyService companyService;
-    private final CompanyReviewService companyReviewService;
 
-    public CompanyController(CompanyService companyService, CompanyReviewService companyReviewService) {
+    public CompanyController(CompanyService companyService) {
         this.companyService = companyService;
-        this.companyReviewService = companyReviewService;
     }
 
     @GetMapping("")
