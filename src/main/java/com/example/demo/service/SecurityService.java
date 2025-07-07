@@ -18,7 +18,6 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.response.LoginResponse;
 import com.example.demo.dto.response.UserClaims;
 import com.example.demo.dto.response.UserDTO;
 import com.nimbusds.jose.util.Base64;
