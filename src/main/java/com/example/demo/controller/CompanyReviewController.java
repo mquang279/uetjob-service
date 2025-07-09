@@ -40,7 +40,7 @@ public class CompanyReviewController {
         return ResponseEntity.ok().body(reviews);
     }
 
-    @GetMapping("users/{id}/review")
+    @GetMapping("users/{id}/reviews")
     public ResponseEntity<List<CompanyReview>> getAllUserReviews(@PathVariable Long id) {
         List<CompanyReview> reviews = this.companyReviewService.getReviewsByUserId(id);
         return ResponseEntity.ok().body(reviews);
