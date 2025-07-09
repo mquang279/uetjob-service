@@ -17,7 +17,6 @@ public class UserDTO {
     private Integer age;
     private Gender gender;
     private String address;
-    private List<CompanyReview> reviews;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
     private Instant createdAt;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")

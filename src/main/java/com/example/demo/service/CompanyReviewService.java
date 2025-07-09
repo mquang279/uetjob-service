@@ -13,7 +13,7 @@ public interface CompanyReviewService {
     CompanyReview createReview(Long id, CompanyReviewDTO reviewDTO);
 
     CompanyReview updateReview(Long companyId, Long reviewId, CompanyReviewDTO reviewDTO);
-
+    
     CompanyReview getReviewById(Long id);
 
     void deleteReview(Long companyId, Long reviewId);
