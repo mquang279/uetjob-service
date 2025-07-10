@@ -53,6 +53,9 @@ public class Company {
     @OneToMany(mappedBy = "company")
     private List<CompanyReview> reviews;
 
+    @OneToMany(mappedBy = "company")
+    private List<Job> jobs;
+
     public Company() {
 
     }
