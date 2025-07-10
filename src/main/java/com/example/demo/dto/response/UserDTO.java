@@ -1,9 +1,7 @@
 package com.example.demo.dto.response;
 
 import java.time.Instant;
-import java.util.List;
 
-import com.example.demo.entity.CompanyReview;
 import com.example.demo.entity.enums.Gender;
 import com.fasterxml.jackson.annotation.JsonFormat;
 

@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.example.demo.entity.enums.JobCategory;
 import com.example.demo.entity.enums.JobLevel;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,8 +36,10 @@ public class Job {
 
     private String location;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
     private Instant startDate;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
     private Instant endDate;
 
     private double minSalary;
@@ -50,26 +54,25 @@ public class Job {
     @Enumerated(EnumType.STRING)
     private JobLevel level;
 
-    private boolean isActive;
+    private boolean active;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
     private Instant createdAt;
 
     private String createdBy;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
     private Instant updatedAt;
 
     private String updatedBy;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)
+    @JsonIgnoreProperties(value = { "jobs" })
     private Company company;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "job_skill",
-        joinColumns = @JoinColumn(name = "job_id"),
-        inverseJoinColumns = @JoinColumn(name = "skill_id")
-    )
+    @JoinTable(name = "job_skill", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
+    @JsonIgnoreProperties(value = { "jobs" })
     private List<Skill> skills;
-
 }
