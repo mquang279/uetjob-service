@@ -1,23 +1,30 @@
 package com.example.demo.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.response.PaginationResponse;
+import com.example.demo.entity.Company;
 import com.example.demo.entity.Job;
+import com.example.demo.entity.Skill;
 import com.example.demo.exception.JobNotFoundException;
 import com.example.demo.repository.JobRepository;
 import com.example.demo.service.CompanyService;
 import com.example.demo.service.JobService;
 
+@Service
 public class JobServiceImpl implements JobService {
     private final JobRepository jobRepository;
+    private final CompanyService companyService;
 
-    public JobServiceImpl(JobRepository jobRepository) {
+    public JobServiceImpl(JobRepository jobRepository, CompanyService companyService) {
         this.jobRepository = jobRepository;
+        this.companyService = companyService;
     }
 
     @Override
@@ -35,8 +42,10 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public Job updateJob(Long id, Job job) {
-        Job existingJob = this.getJobById(id);
+    public Job updateJob(Long companyId, Long jobId, Job job) {
+        Job existingJob = this.getJobById(jobId);
+
+        validateJobBelongToCompany(existingJob, companyId);
 
         if (job.getTitle() != null) {
             existingJob.setTitle(job.getTitle());
@@ -76,8 +85,28 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public void deleteJob(Long id) {
-        Job job = this.getJobById(id);
+    public void deleteJob(Long companyId, Long jobId) {
+        Job job = this.getJobById(jobId);
+        validateJobBelongToCompany(job, companyId);
         this.jobRepository.delete(job);
+    }
+
+    @Override
+    public Job createJob(Long companyId, Job job) {
+        Company company = this.companyService.getCompanyById(companyId);
+
+        job.setCompany(company);
+
+        if (job.getActive() == null) {
+            job.setActive(true);
+        }
+
+        return this.jobRepository.save(job);
+    }
+
+    public void validateJobBelongToCompany(Job job, Long companyId) {
+        if (job.getCompany().getId() != companyId) {
+            throw new IllegalArgumentException("This job does not belong to this company.");
+        }
     }
 }

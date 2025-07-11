@@ -8,7 +8,9 @@ public interface JobService {
 
     Job getJobById(Long id);
 
-    Job updateJob(Long id, Job job);
+    Job updateJob(Long companyId, Long jobId, Job job);
 
-    void deleteJob(Long id);
+    void deleteJob(Long companyId, Long jobId);
+
+    Job createJob(Long companyId, Job job);
 }
