@@ -8,8 +8,6 @@ import com.example.demo.dto.response.PaginationResponse;
 import com.example.demo.entity.Skill;
 import com.example.demo.service.SkillService;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

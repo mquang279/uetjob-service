@@ -3,7 +3,6 @@ package com.example.demo.entity;
 import java.time.Instant;
 import java.util.List;
 
-import com.example.demo.entity.enums.JobCategory;
 import com.example.demo.entity.enums.JobLevel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -42,19 +41,16 @@ public class Job {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
     private Instant endDate;
 
-    private double minSalary;
+    private Double minSalary;
 
-    private double maxSalary;
+    private Double maxSalary;
 
-    private int quantity;
-
-    @Enumerated(EnumType.STRING)
-    private JobCategory category;
+    private Integer quantity;
 
     @Enumerated(EnumType.STRING)
     private JobLevel level;
 
-    private boolean active;
+    private Boolean active;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
     private Instant createdAt;
