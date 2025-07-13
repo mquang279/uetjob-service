@@ -10,6 +10,7 @@ import com.example.demo.service.SkillService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,8 +37,14 @@ public class SkillController {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.skillService.createSkill(skill));
     }
 
-    @PutMapping("skills/{id}")
+    @PutMapping("/skills/{id}")
     public ResponseEntity<Skill> updateSkill(@PathVariable Long id, @RequestBody Skill skill) {
         return ResponseEntity.ok().body(this.skillService.updateSkill(id, skill));
+    }
+
+    @DeleteMapping("/skills/{id}")
+    public ResponseEntity<Void> deleteSkill(@PathVariable Long id) {
+        this.skillService.deleteSkill(id);
+        return ResponseEntity.noContent().build();
     }
 }

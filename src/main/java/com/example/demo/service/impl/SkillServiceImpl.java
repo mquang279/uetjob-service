@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.response.PaginationResponse;
+import com.example.demo.entity.Job;
 import com.example.demo.entity.Skill;
 import com.example.demo.exception.SkillNotFoundException;
 import com.example.demo.repository.SkillRepository;
@@ -47,6 +49,17 @@ public class SkillServiceImpl implements SkillService {
             existingSkill.setName(skill.getName());
         }
         return this.skillRepository.save(existingSkill);
+    }
+
+    @Override
+    public void deleteSkill(Long id) {
+        Skill skill = this.getSkillById(id);
+        List<Job> jobs = skill.getJobs();
+        for (Job job : jobs) {
+            List<Skill> jobSkills = job.getSkills();
+            jobSkills.remove(skill);
+        }
+        this.skillRepository.delete(skill);
     }
 
 }

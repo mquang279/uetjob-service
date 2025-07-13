@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.example.demo.service.SecurityService;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,6 +39,7 @@ public class Skill {
     private String updatedBy;
 
     @ManyToMany(mappedBy = "skills", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = "skills")
     private List<Job> jobs;
 
     @PrePersist
