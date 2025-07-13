@@ -36,6 +36,14 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public PaginationResponse<Job> getAllJobsOfCompany(int page, int pageSize, Long companyId) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Job> jobs = this.jobRepository.findByCompany(companyId, pageable);
+        PaginationResponse<Job> response = new PaginationResponse<>(jobs);
+        return response;
+    }
+
+    @Override
     public Job getJobById(Long id) {
         Optional<Job> jobOptional = this.jobRepository.findById(id);
         return jobOptional.orElseThrow(() -> new JobNotFoundException(id));
@@ -109,4 +117,5 @@ public class JobServiceImpl implements JobService {
             throw new IllegalArgumentException("This job does not belong to this company.");
         }
     }
+
 }

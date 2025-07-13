@@ -31,6 +31,17 @@ public class JobController {
         return ResponseEntity.ok().body(this.jobService.getAllJobs(page, pageSize));
     }
 
+    @GetMapping("/jobs/{id}")
+    public ResponseEntity<Job> getJobById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(this.jobService.getJobById(id));
+    }
+
+    @GetMapping("/companies/{company_id}/jobs")
+    public ResponseEntity<PaginationResponse<Job>> getAllJobsOfCompany(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int pageSize, @PathVariable("company_id") Long id) {
+        return ResponseEntity.ok().body(this.jobService.getAllJobsOfCompany(page, pageSize, id));
+    }
+
     @PostMapping("/companies/{company_id}/jobs")
     public ResponseEntity<Job> createJob(@PathVariable("company_id") Long companyId, @RequestBody Job job) {
         return ResponseEntity.ok().body(this.jobService.createJob(companyId, job));

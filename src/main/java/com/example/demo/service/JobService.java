@@ -6,6 +6,8 @@ import com.example.demo.entity.Job;
 public interface JobService {
     PaginationResponse<Job> getAllJobs(int page, int pageSize);
 
+    PaginationResponse<Job> getAllJobsOfCompany(int page, int pageSize, Long companyId);
+
     Job getJobById(Long id);
 
     Job updateJob(Long companyId, Long jobId, Job job);
