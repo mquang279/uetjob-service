@@ -15,6 +15,17 @@ import jakarta.validation.ConstraintViolationException;
 
 @RestControllerAdvice
 public class GlobalException {
+        @ExceptionHandler(SkillNotFoundException.class)
+        public ResponseEntity<ErrorResponse> handleSkillNotFoundException(SkillNotFoundException e,
+                        WebRequest request) {
+                ErrorResponse errorResponse = new ErrorResponse(
+                                HttpStatus.BAD_REQUEST.value(),
+                                "Bad Request",
+                                e.getMessage(),
+                                request.getDescription(false).replace("uri=", ""));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
+
         @ExceptionHandler(CompanyReviewNotFoundException.class)
         public ResponseEntity<ErrorResponse> handleCompanyReviewNotFoundException(CompanyReviewNotFoundException e,
                         WebRequest request) {

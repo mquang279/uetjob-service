@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.example.demo.service.SecurityService;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -52,6 +53,9 @@ public class Company {
 
     @OneToMany(mappedBy = "company")
     private List<CompanyReview> reviews;
+
+    @OneToMany(mappedBy = "company")
+    private List<Job> jobs;
 
     public Company() {
 
