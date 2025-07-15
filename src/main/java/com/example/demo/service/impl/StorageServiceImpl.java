@@ -90,7 +90,7 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public void store(MultipartFile file, String folder) {
+    public String store(MultipartFile file, String folder) {
         try {
             validateFile(file);
 
@@ -104,6 +104,7 @@ public class StorageServiceImpl implements StorageService {
                 Files.copy(inputStream, destinationFile,
                         StandardCopyOption.REPLACE_EXISTING);
             }
+            return fileName;
         } catch (IOException e) {
             throw new StorageException("Failed to store file.");
         }

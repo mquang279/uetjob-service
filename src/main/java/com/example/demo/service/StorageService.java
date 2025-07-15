@@ -11,7 +11,7 @@ public interface StorageService {
 
     void createFolder(String folderName);
 
-    void store(MultipartFile file, String folder);
+    String store(MultipartFile file, String folder);
 
     Stream<Path> loadAll();
 
