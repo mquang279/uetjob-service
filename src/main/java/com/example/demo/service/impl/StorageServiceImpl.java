@@ -12,18 +12,24 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.annotation.PostConstruct;
+
 import com.example.demo.exception.StorageException;
 import com.example.demo.service.StorageService;
 
 @Service
 public class StorageServiceImpl implements StorageService {
-    private final Path root = Paths.get("upload");
+    @Value("${storage.directory}")
+    private String path;
+
+    private Path root;
 
     private final long MAX_FILE_SIZE = 10 * 1024 * 1024;
     private final List<String> ALLOWED_EXTENSIONS = Arrays.asList(
@@ -32,6 +38,15 @@ public class StorageServiceImpl implements StorageService {
             "image/jpeg", "image/png",
             "application/pdf", "application/msword",
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+
+    public StorageServiceImpl() {
+
+    }
+
+    @PostConstruct
+    public void initialize() {
+        this.root = Paths.get(path);
+    }
 
     private void validateFile(MultipartFile file) {
         if (file.getSize() > MAX_FILE_SIZE) {
@@ -75,27 +90,22 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public void store(MultipartFile file) {
+    public void store(MultipartFile file, String folder) {
         try {
-            if (file.isEmpty()) {
-                throw new StorageException("Failed to store empty file.");
-            }
             validateFile(file);
 
+            createFolder(folder);
+
             String fileName = Instant.now().toEpochMilli() + "-" + file.getOriginalFilename();
-            Path destinationFile = this.root.resolve(
-                    Paths.get(fileName))
+            Path destinationFile = this.root.resolve(folder).resolve(fileName)
                     .normalize().toAbsolutePath();
-            if (!destinationFile.getParent().equals(this.root.toAbsolutePath())) {
-                throw new StorageException(
-                        "Cannot store file outside current directory.");
-            }
+
             try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream, destinationFile,
                         StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (IOException e) {
-            throw new StorageException("Failed to store file.", e);
+            throw new StorageException("Failed to store file.");
         }
     }
 
@@ -106,7 +116,7 @@ public class StorageServiceImpl implements StorageService {
                     .filter(path -> !path.equals(this.root))
                     .map(this.root::relativize);
         } catch (IOException e) {
-            throw new StorageException("Failed to read stored files", e);
+            throw new StorageException("Failed to read stored files");
         }
     }
 
@@ -135,6 +145,25 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public void deleteAll() {
         FileSystemUtils.deleteRecursively(root.toFile());
+    }
+
+    @Override
+    public void createFolder(String folderName) {
+        try {
+            if (folderName == null || folderName.trim().isEmpty()) {
+                throw new StorageException("Folder name cannot be null or empty");
+            }
+
+            String sanitizedFolderName = folderName.replaceAll("[^a-zA-Z0-9._-]", "_");
+
+            Path folderPath = this.root.resolve(sanitizedFolderName).normalize().toAbsolutePath();
+
+            if (!Files.exists(folderPath)) {
+                Files.createDirectories(folderPath);
+            }
+        } catch (IOException e) {
+            throw new StorageException("Failed to create folder: " + folderName, e);
+        }
     }
 
 }
