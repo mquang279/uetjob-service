@@ -31,6 +31,7 @@ public class StorageServiceImpl implements StorageService {
 
     private Path root;
 
+    // TODO: move file size to application properties
     private final long MAX_FILE_SIZE = 10 * 1024 * 1024;
     private final List<String> ALLOWED_EXTENSIONS = Arrays.asList(
             "jpg", "jpeg", "png", "pdf", "doc", "docx");
@@ -49,6 +50,10 @@ public class StorageServiceImpl implements StorageService {
     }
 
     private void validateFile(MultipartFile file) {
+        if (file.isEmpty()) {
+            throw new StorageException("Failed to store empty file");
+        }
+
         if (file.getSize() > MAX_FILE_SIZE) {
             throw new StorageException(
                     "File size exceeds maximum allowed size of " + (MAX_FILE_SIZE / 1024 / 1024) + "MB");
