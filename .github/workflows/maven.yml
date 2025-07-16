@@ -17,7 +17,7 @@ on:
 permissions:
   actions: read
   security-events: write
-  contents: read, write
+  contents: write
   packages: write
   pull-requests: write
   repository-projects: write
