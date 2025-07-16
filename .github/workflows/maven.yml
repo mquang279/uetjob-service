@@ -17,6 +17,8 @@ on:
 permissions:
   actions: read
   security-events: write
+  contents: read
+  packages: write
 
 jobs:
   build:
