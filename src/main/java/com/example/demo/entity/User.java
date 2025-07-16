@@ -6,6 +6,8 @@ import java.util.List;
 import com.example.demo.dto.request.RegistrationRequest;
 import com.example.demo.entity.enums.Gender;
 import com.example.demo.service.SecurityService;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,13 +44,22 @@ public class User {
     private String address;
     @Column(length = 1000, unique = true)
     private String refreshToken;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
     private Instant createdAt;
     private Instant updatedAt;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
     private String createdBy;
     private String updatedBy;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<CompanyReview> reviews;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Resume> resumes;
 
     public User() {
 
