@@ -1,6 +1,5 @@
 package com.example.demo.service.impl;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.example.demo.dto.response.PaginationResponse;
 import com.example.demo.entity.Company;
 import com.example.demo.entity.Job;
-import com.example.demo.entity.Skill;
 import com.example.demo.exception.JobNotFoundException;
 import com.example.demo.repository.JobRepository;
 import com.example.demo.service.CompanyService;

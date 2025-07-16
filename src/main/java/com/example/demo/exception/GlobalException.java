@@ -127,6 +127,17 @@ public class GlobalException {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
         }
 
+        @ExceptionHandler(RuntimeException.class)
+        public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException e,
+                        WebRequest request) {
+                ErrorResponse errorResponse = new ErrorResponse(
+                                HttpStatus.BAD_REQUEST.value(),
+                                "Bad Request",
+                                e.getMessage(),
+                                request.getDescription(false).replace("uri=", ""));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
+
         @ExceptionHandler(Exception.class)
         public ResponseEntity<ErrorResponse> handleUnwantedException(Exception e, WebRequest request) {
                 ErrorResponse errorResponse = new ErrorResponse(
