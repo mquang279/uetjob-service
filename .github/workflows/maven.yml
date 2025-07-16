@@ -17,8 +17,10 @@ on:
 permissions:
   actions: read
   security-events: write
-  contents: read
+  contents: read, write
   packages: write
+  pull-requests: write
+  repository-projects: write
 
 jobs:
   build:
