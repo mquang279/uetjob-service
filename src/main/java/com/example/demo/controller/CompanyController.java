@@ -59,7 +59,4 @@ public class CompanyController {
         this.companyService.deleteUserById(id);
         return ResponseEntity.noContent().build();
     }
-
-    
-
 }

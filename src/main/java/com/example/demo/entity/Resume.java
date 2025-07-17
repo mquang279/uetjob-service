@@ -1,15 +1,12 @@
 package com.example.demo.entity;
 
 import java.time.Instant;
-import java.util.List;
 
-import com.example.demo.entity.enums.JobLevel;
+import com.example.demo.entity.enums.ResumeStatus;
 import com.example.demo.service.SecurityService;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -17,44 +14,28 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-public class Job {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Resume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-
-    @Column(columnDefinition = "MEDIUMTEXT")
-    private String description;
-
-    private String location;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
-    private Instant startDate;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
-    private Instant endDate;
-
-    private Double minSalary;
-
-    private Double maxSalary;
-
-    private Integer quantity;
+    @NotBlank(message = "URL must not blank")
+    private String url;
 
     @Enumerated(EnumType.STRING)
-    private JobLevel level;
-
-    private Boolean active;
+    private ResumeStatus status;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
     private Instant createdAt;
@@ -67,18 +48,14 @@ public class Job {
     private String updatedBy;
 
     @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
-    private Company company;
+    private User user;
 
-    @ManyToMany
-    @JoinTable(name = "job_skill", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
-    @JsonIgnoreProperties(value = { "jobs" })
-    private List<Skill> skills;
-
-    @OneToMany(mappedBy = "job")
+    @ManyToOne
+    @JoinColumn(name = "job_id", nullable = false)
     @JsonIgnore
-    private List<Resume> resumes;
+    private Job job;
 
     @PrePersist
     public void handleBeforeCreate() {
