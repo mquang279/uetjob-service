@@ -28,5 +28,4 @@ public class StorageController {
                 this.storageService.store(file, folder));
         return ResponseEntity.ok().body(response);
     }
-
 }
