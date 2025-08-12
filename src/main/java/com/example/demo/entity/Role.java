@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.List;
 
 import com.example.demo.service.SecurityService;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -28,10 +29,12 @@ public class Role {
 
     private Boolean active;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
     private Instant createdAt;
 
     private String createdBy;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
     private Instant updatedAt;
 
     private String updatedBy;
@@ -49,10 +52,6 @@ public class Role {
     }
 
     @ManyToMany
-    @JoinTable(
-        name="permissions_roles",
-        joinColumns = @JoinColumn(name= "role_id"),
-        inverseJoinColumns = @JoinColumn(name = "course_id")
-    )
+    @JoinTable(name = "permissions_roles", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
     private List<Permission> permissions;
 }
