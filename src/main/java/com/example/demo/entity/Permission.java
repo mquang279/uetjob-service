@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.example.demo.service.SecurityService;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -45,6 +47,10 @@ public class Permission {
 
     private String updatedBy;
 
+    @ManyToMany(mappedBy = "permissions")
+    @JsonIgnoreProperties(value = "permissions")
+    private List<Role> roles;
+
     @PrePersist
     public void handleBeforeCreate() {
         this.createdAt = Instant.now();
@@ -57,6 +63,4 @@ public class Permission {
         this.updatedBy = SecurityService.getCurrentUserEmailLogin();
     }
 
-    @ManyToMany(mappedBy = "permissions")
-    private List<Role> roles;
 }

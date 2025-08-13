@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.example.demo.service.SecurityService;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -52,6 +53,7 @@ public class Role {
     }
 
     @ManyToMany
+    @JsonIgnoreProperties(value = "roles")
     @JoinTable(name = "permissions_roles", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
     private List<Permission> permissions;
 }

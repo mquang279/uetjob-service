@@ -7,5 +7,5 @@ import com.example.demo.entity.Permission;
 
 @Repository
 public interface PermissionRepository extends JpaRepository<Permission, Long> {
-
+    boolean existsByApiPathAndMethod(String apiPath, String method);
 }
