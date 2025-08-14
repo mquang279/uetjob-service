@@ -2,12 +2,14 @@ package com.example.demo.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.request.LoginRequest;
+import com.example.demo.dto.request.RegistrationRequest;
 import com.example.demo.dto.response.LoginResponse;
+import com.example.demo.dto.response.RegistrationResponse;
 import com.example.demo.dto.response.UserDTO;
 import com.example.demo.entity.User;
 import com.example.demo.service.SecurityService;
@@ -33,16 +37,18 @@ public class AuthController {
         private final AuthenticationManagerBuilder authenticationManagerBuilder;
         private final SecurityService securityService;
         private final UserService userService;
+        private final PasswordEncoder passwordEncoder;
 
         @Value("${refresh.token.expiration.time}")
         private long refreshTokenExpiration;
 
         public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder,
                         SecurityService securityService,
-                        UserService userService) {
+                        UserService userService, PasswordEncoder passwordEncoder) {
                 this.authenticationManagerBuilder = authenticationManagerBuilder;
                 this.securityService = securityService;
                 this.userService = userService;
+                this.passwordEncoder = passwordEncoder;
         }
 
         @PostMapping("/login")
@@ -122,6 +128,14 @@ public class AuthController {
                 return ResponseEntity.ok()
                                 .header(HttpHeaders.SET_COOKIE, cookies.toString())
                                 .body(data);
+        }
+
+        @PostMapping("/register")
+        public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody RegistrationRequest user) {
+                String hashPassword = this.passwordEncoder.encode(user.getPassword());
+                user.setPassword(hashPassword);
+                RegistrationResponse data = this.userService.createUser(user);
+                return ResponseEntity.status(HttpStatus.CREATED).body(data);
         }
 
         @PostMapping("/logout")

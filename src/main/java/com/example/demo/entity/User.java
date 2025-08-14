@@ -66,7 +66,7 @@ public class User {
     private List<Resume> resumes;
 
     @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
+    @JoinColumn(name = "role_id")
     private Role role;
 
     public User() {
