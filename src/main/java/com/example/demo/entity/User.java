@@ -16,6 +16,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -61,6 +65,10 @@ public class User {
     @JsonIgnore
     private List<Resume> resumes;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
     public User() {
 
     }
@@ -69,7 +77,7 @@ public class User {
         this.setEmail(userDTO.getEmail());
         this.setUsername(userDTO.getUsername());
         this.setPassword(userDTO.getPassword());
-        ;
+        this.setRole(userDTO.getRole());
     }
 
     public User(String username, String email, String password, Integer age, Gender gender, String address,

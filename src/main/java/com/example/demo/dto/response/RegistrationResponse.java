@@ -2,6 +2,7 @@ package com.example.demo.dto.response;
 
 import java.time.Instant;
 
+import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.entity.enums.Gender;
 
@@ -15,6 +16,7 @@ public class RegistrationResponse {
     private Integer age;
     private Gender gender;
     private String address;
+    private Role role;
     private Instant createdAt;
 
     public RegistrationResponse(Long id, String username, String email, Integer age, Gender gender, String address,
@@ -26,6 +28,7 @@ public class RegistrationResponse {
         this.gender = gender;
         this.address = address;
         this.createdAt = createdAt;
+        this.role = role;
     }
 
     public RegistrationResponse(User user) {
@@ -36,5 +39,6 @@ public class RegistrationResponse {
         this.setGender(user.getGender());
         this.setAddress(user.getAddress());
         this.setCreatedAt(user.getCreatedAt());
+        this.setRole(user.getRole());
     }
 }

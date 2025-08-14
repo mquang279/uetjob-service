@@ -17,14 +17,17 @@ import com.example.demo.exception.EmailAlreadyExistsException;
 import com.example.demo.exception.RefreshTokenAndEmailNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.RoleService;
 import com.example.demo.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final RoleService roleService;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleService roleService) {
         this.userRepository = userRepository;
+        this.roleService = roleService;
     }
 
     @Override
@@ -32,6 +35,10 @@ public class UserServiceImpl implements UserService {
         if (this.userRepository.existsByEmail(userDTO.getEmail())) {
             throw new EmailAlreadyExistsException(userDTO.getEmail());
         }
+        if (userDTO.getRole() != null) {
+            this.roleService.getRoleById(userDTO.getRole().getId());
+        }
+
         User user = new User(userDTO);
         RegistrationResponse response = new RegistrationResponse(this.userRepository.save(user));
         return response;
@@ -66,6 +73,10 @@ public class UserServiceImpl implements UserService {
             existingUser.setEmail(user.getEmail());
         }
 
+        if (user.getRole() != null) {
+            this.roleService.getRoleById(id);
+        }
+
         if (user.getUsername() != null) {
             existingUser.setUsername(user.getUsername());
         }
@@ -97,12 +108,15 @@ public class UserServiceImpl implements UserService {
     public UserDTO convertToUserDTO(User user) {
         UserDTO userDTO = new UserDTO();
 
+        userDTO.setRole(user.getRole());
         userDTO.setAddress(user.getAddress());
         userDTO.setAge(user.getAge());
         userDTO.setEmail(user.getEmail());
         userDTO.setGender(user.getGender());
         userDTO.setId(user.getId());
         userDTO.setUsername(user.getUsername());
+        userDTO.setCreatedAt(user.getCreatedAt());
+        userDTO.setUpdatedAt(user.getUpdatedAt());
 
         return userDTO;
     }
