@@ -2,6 +2,7 @@ package com.example.demo.dto.response;
 
 import java.time.Instant;
 
+import com.example.demo.entity.Role;
 import com.example.demo.entity.enums.Gender;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -15,6 +16,7 @@ public class UserDTO {
     private Integer age;
     private Gender gender;
     private String address;
+    private Role role;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")
     private Instant createdAt;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+7")

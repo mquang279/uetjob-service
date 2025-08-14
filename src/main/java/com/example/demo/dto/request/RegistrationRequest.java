@@ -1,5 +1,7 @@
 package com.example.demo.dto.request;
 
+import com.example.demo.entity.Role;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -17,12 +19,15 @@ public class RegistrationRequest {
     @Pattern(message = "Password is not valid", regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")
     private String password;
 
+    private Role role;
+
     public RegistrationRequest() {
     }
 
-    public RegistrationRequest(String username, String email, String password) {
+    public RegistrationRequest(String username, String email, String password, Role role) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 }

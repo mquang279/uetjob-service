@@ -3,15 +3,21 @@ package com.example.demo.entity;
 import java.time.Instant;
 import java.util.List;
 
+import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
+
 import com.example.demo.service.SecurityService;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.AllArgsConstructor;
@@ -24,6 +30,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Role {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -40,6 +47,15 @@ public class Role {
 
     private String updatedBy;
 
+    @OneToMany(mappedBy = "role")
+    @JsonIgnore
+    private List<User> users;
+
+    @ManyToMany
+    @JsonIgnoreProperties(value = "roles")
+    @JoinTable(name = "permissions_roles", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    private List<Permission> permissions;
+
     @PrePersist
     public void handleBeforeCreate() {
         this.createdAt = Instant.now();
@@ -52,8 +68,4 @@ public class Role {
         this.updatedBy = SecurityService.getCurrentUserEmailLogin();
     }
 
-    @ManyToMany
-    @JsonIgnoreProperties(value = "roles")
-    @JoinTable(name = "permissions_roles", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
-    private List<Permission> permissions;
 }
