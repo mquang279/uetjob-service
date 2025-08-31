@@ -59,4 +59,10 @@ public class CompanyController {
         this.companyService.deleteUserById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/total")
+    public ResponseEntity<Long> getTotalCompanies() {
+        return ResponseEntity.ok().body(this.companyService.getTotalCompanies());
+    }
+
 }

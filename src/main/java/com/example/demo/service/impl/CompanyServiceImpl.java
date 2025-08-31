@@ -67,4 +67,9 @@ public class CompanyServiceImpl implements CompanyService {
         this.companyRepository.delete(company);
     }
 
+    @Override
+    public Long getTotalCompanies() {
+        return this.companyRepository.count();
+    }
+
 }
