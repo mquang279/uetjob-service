@@ -116,4 +116,8 @@ public class JobServiceImpl implements JobService {
         }
     }
 
+    @Override
+    public Long getTotalJobs() {
+        return this.jobRepository.count();
+    }
 }

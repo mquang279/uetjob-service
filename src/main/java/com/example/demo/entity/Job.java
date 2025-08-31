@@ -68,7 +68,7 @@ public class Job {
 
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
-    @JsonIgnore
+    @JsonIgnoreProperties(value = { "jobs" })
     private Company company;
 
     @ManyToMany

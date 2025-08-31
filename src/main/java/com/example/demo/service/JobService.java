@@ -15,4 +15,6 @@ public interface JobService {
     void deleteJob(Long companyId, Long jobId);
 
     Job createJob(Long companyId, Job job);
+
+    Long getTotalJobs();
 }
