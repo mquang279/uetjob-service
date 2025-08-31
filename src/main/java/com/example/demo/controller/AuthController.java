@@ -90,10 +90,31 @@ public class AuthController {
         }
 
         @GetMapping("/account")
-        public ResponseEntity<UserDTO> getUserInformation() {
-                String email = SecurityService.getCurrentUserEmailLogin();
-                User user = this.userService.getUserByEmail(email);
-                return ResponseEntity.ok().body(this.userService.convertToUserDTO(user));
+        public ResponseEntity<LoginResponse> getUserInformation() {
+                try {
+                        String email = SecurityService.getCurrentUserEmailLogin();
+
+                        // Check if email is null or empty (user not authenticated)
+                        if (email == null || email.trim().isEmpty() || "anonymousUser".equals(email)) {
+                                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                        }
+
+                        User user = this.userService.getUserByEmail(email);
+                        UserDTO userDTO = this.userService.convertToUserDTO(user);
+
+                        // Create response with user info and access token
+                        LoginResponse data = new LoginResponse();
+                        data.setUser(userDTO);
+
+                        // Create new access token
+                        String accessToken = this.securityService.createAccessToken(email, userDTO);
+                        data.setAccessToken(accessToken);
+
+                        return ResponseEntity.ok().body(data);
+                } catch (Exception e) {
+                        // Handle any authentication-related exceptions
+                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                }
         }
 
         @GetMapping("/refresh")

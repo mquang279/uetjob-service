@@ -27,8 +27,13 @@ public class JobController {
 
     @GetMapping("/jobs")
     public ResponseEntity<PaginationResponse<Job>> getAllJobs(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int pageSize) {
+            @RequestParam(defaultValue = "9") int pageSize) {
         return ResponseEntity.ok().body(this.jobService.getAllJobs(page, pageSize));
+    }
+
+    @GetMapping("/jobs/count")
+    public ResponseEntity<Long> getTotalJobsCount() {
+        return ResponseEntity.ok().body(this.jobService.getTotalJobs());
     }
 
     @GetMapping("/jobs/{id}")
