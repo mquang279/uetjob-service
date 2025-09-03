@@ -13,4 +13,11 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     @Query(value = "SELECT * "
             + "FROM job WHERE company_id = ?1 ORDER BY ?#{#pageable}", nativeQuery = true)
     Page<Job> findByCompany(Long companyId, Pageable pageable);
+
+    @Query(value = "SELECT * "
+            + "FROM job WHERE active = true ORDER BY ?#{#pageable}", nativeQuery = true)
+    Page<Job> findActiveJobs(Pageable pageable);
+
+    @Query(value = "SELECT COUNT(*) FROM job WHERE active = true", nativeQuery = true)
+    Long countActiveJobs();
 }

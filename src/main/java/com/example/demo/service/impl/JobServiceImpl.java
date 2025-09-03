@@ -120,4 +120,17 @@ public class JobServiceImpl implements JobService {
     public Long getTotalJobs() {
         return this.jobRepository.count();
     }
+
+    @Override
+    public PaginationResponse<Job> getActiveJobs(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Job> jobs = this.jobRepository.findActiveJobs(pageable);
+        PaginationResponse<Job> response = new PaginationResponse<>(jobs);
+        return response;
+    }
+
+    @Override
+    public Long getTotalActiveJobs() {
+        return this.jobRepository.countActiveJobs();
+    }
 }

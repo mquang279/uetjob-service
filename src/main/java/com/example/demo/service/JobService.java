@@ -8,6 +8,8 @@ public interface JobService {
 
     PaginationResponse<Job> getAllJobsOfCompany(int page, int pageSize, Long companyId);
 
+    PaginationResponse<Job> getActiveJobs(int page, int pageSize);
+
     Job getJobById(Long id);
 
     Job updateJob(Long companyId, Long jobId, Job job);
@@ -17,4 +19,6 @@ public interface JobService {
     Job createJob(Long companyId, Job job);
 
     Long getTotalJobs();
+
+    Long getTotalActiveJobs();
 }
