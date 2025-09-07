@@ -42,6 +42,13 @@ public class JobController {
         return ResponseEntity.ok().body(this.jobService.getActiveJobs(page, pageSize));
     }
 
+    @GetMapping("/jobs/search")
+    public ResponseEntity<PaginationResponse<Job>> findJob(@RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "9") int pageSize) {
+        return ResponseEntity.ok().body(this.jobService.findJobByParam(page, pageSize, keyword));
+    }
+
     @GetMapping("/jobs/active/count")
     public ResponseEntity<Long> getTotalActiveJobsCount() {
         return ResponseEntity.ok().body(this.jobService.getTotalActiveJobs());

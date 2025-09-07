@@ -10,6 +10,8 @@ public interface JobService {
 
     PaginationResponse<Job> getActiveJobs(int page, int pageSize);
 
+    PaginationResponse<Job> findJobByParam(int page, int pageSize, String param);
+
     Job getJobById(Long id);
 
     Job updateJob(Long companyId, Long jobId, Job job);

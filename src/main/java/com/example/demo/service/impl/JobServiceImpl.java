@@ -133,4 +133,13 @@ public class JobServiceImpl implements JobService {
     public Long getTotalActiveJobs() {
         return this.jobRepository.countActiveJobs();
     }
+
+    @Override
+    public PaginationResponse<Job> findJobByParam(int page, int pageSize, String param) {
+        param = param.toLowerCase();
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Job> jobs = this.jobRepository.findJobByParam(pageable, param);
+        PaginationResponse<Job> response = new PaginationResponse<>(jobs);
+        return response;
+    }
 }
