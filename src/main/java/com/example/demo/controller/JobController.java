@@ -36,6 +36,24 @@ public class JobController {
         return ResponseEntity.ok().body(this.jobService.getTotalJobs());
     }
 
+    @GetMapping("/jobs/active")
+    public ResponseEntity<PaginationResponse<Job>> getActiveJobs(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "9") int pageSize) {
+        return ResponseEntity.ok().body(this.jobService.getActiveJobs(page, pageSize));
+    }
+
+    @GetMapping("/jobs/search")
+    public ResponseEntity<PaginationResponse<Job>> findJob(@RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "9") int pageSize) {
+        return ResponseEntity.ok().body(this.jobService.findJobByParam(page, pageSize, keyword));
+    }
+
+    @GetMapping("/jobs/active/count")
+    public ResponseEntity<Long> getTotalActiveJobsCount() {
+        return ResponseEntity.ok().body(this.jobService.getTotalActiveJobs());
+    }
+
     @GetMapping("/jobs/{id}")
     public ResponseEntity<Job> getJobById(@PathVariable Long id) {
         return ResponseEntity.ok().body(this.jobService.getJobById(id));
@@ -64,4 +82,5 @@ public class JobController {
         this.jobService.deleteJob(companyId, jobId);
         return ResponseEntity.noContent().build();
     }
+
 }

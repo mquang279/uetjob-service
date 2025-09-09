@@ -3,7 +3,9 @@ package com.example.demo.entity;
 import java.time.Instant;
 import java.util.List;
 
+import com.example.demo.entity.enums.CandidateLevel;
 import com.example.demo.entity.enums.JobLevel;
+import com.example.demo.entity.enums.JobType;
 import com.example.demo.service.SecurityService;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -53,6 +55,12 @@ public class Job {
 
     @Enumerated(EnumType.STRING)
     private JobLevel level;
+
+    @Enumerated(EnumType.STRING)
+    private CandidateLevel candidateLevel;
+
+    @Enumerated(EnumType.STRING)
+    private JobType jobType;
 
     private Boolean active;
 
