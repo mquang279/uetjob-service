@@ -85,6 +85,10 @@ public class StorageServiceImpl implements StorageService {
         return filename.substring(lastDotIndex + 1);
     }
 
+    private void formatFileName(MultipartFile file) {
+
+    }
+
     @Override
     public void init() {
         try {
@@ -95,13 +99,15 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public String store(MultipartFile file, String folder) {
+    public String store(MultipartFile file, String folder, String fileName) {
         try {
             validateFile(file);
 
             createFolder(folder);
 
-            String fileName = Instant.now().toEpochMilli() + "-" + file.getOriginalFilename();
+            String originalFileName = file.getOriginalFilename();
+            fileName = fileName + originalFileName.substring(originalFileName.lastIndexOf('.'));
+
             Path destinationFile = this.root.resolve(folder).resolve(fileName)
                     .normalize().toAbsolutePath();
 

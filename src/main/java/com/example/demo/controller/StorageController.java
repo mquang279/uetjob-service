@@ -23,9 +23,9 @@ public class StorageController {
 
     @PostMapping("/files")
     public ResponseEntity<UploadResponse> uploadFile(@RequestParam("file") MultipartFile file,
-            @RequestParam("folder") String folder) {
+            @RequestParam("folder") String folder, @RequestParam("file_name") String fileName) {
         UploadResponse response = new UploadResponse(HttpStatus.OK.value(), "File uploaded successfully",
-                this.storageService.store(file, folder));
+                this.storageService.store(file, folder, fileName));
         return ResponseEntity.ok().body(response);
     }
 }
