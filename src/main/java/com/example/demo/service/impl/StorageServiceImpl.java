@@ -31,7 +31,6 @@ public class StorageServiceImpl implements StorageService {
 
     private Path root;
 
-    // TODO: move file size to application properties
     private final long MAX_FILE_SIZE = 10 * 1024 * 1024;
     private final List<String> ALLOWED_EXTENSIONS = Arrays.asList(
             "jpg", "jpeg", "png", "pdf", "doc", "docx");
@@ -83,10 +82,6 @@ public class StorageServiceImpl implements StorageService {
             return "";
         }
         return filename.substring(lastDotIndex + 1);
-    }
-
-    private void formatFileName(MultipartFile file) {
-
     }
 
     @Override
@@ -147,7 +142,6 @@ public class StorageServiceImpl implements StorageService {
             } else {
                 throw new StorageException(
                         "Could not read file: " + filename);
-
             }
         } catch (MalformedURLException e) {
             throw new StorageException("Could not read file: " + filename);
