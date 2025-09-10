@@ -50,7 +50,7 @@ public class SecurityConfiguration {
                         (authz) -> authz
                                 .requestMatchers("/", "/api/v1/auth/login", "/api/v1/auth/refresh",
                                         "/api/v1/auth/register",
-                                        "/api/v1/jobs/**")
+                                        "/api/v1/jobs/**", "/uploads/company/**")
                                 .permitAll()
                                 .anyRequest().authenticated())
                 // Add BearerTokenAuthenticationFilter
