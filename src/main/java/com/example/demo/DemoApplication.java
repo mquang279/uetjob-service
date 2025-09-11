@@ -7,7 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.example.demo.service.StorageService;
+import com.example.demo.service.MinioStorageService;
 
 @SpringBootApplication
 public class DemoApplication {
@@ -26,9 +26,9 @@ public class DemoApplication {
 	}
 
 	@Bean
-	CommandLineRunner init(StorageService storageService) {
+	CommandLineRunner init(MinioStorageService minioStorageService) {
 		return (args) -> {
-			storageService.init();
+			minioStorageService.initializeBucket();
 		};
 	}
 }
