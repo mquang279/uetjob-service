@@ -7,8 +7,6 @@ import io.minio.*;
 import io.minio.http.Method;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Service;
@@ -42,15 +40,6 @@ public class MinioStorageServiceImpl implements MinioStorageService {
             } else {
                 System.out.println("Bucket " + minioConfig.getBucketName() + " already existed!");
             }
-
-            String url = minioClient.getPresignedObjectUrl(
-                    GetPresignedObjectUrlArgs.builder()
-                            .method(Method.GET)
-                            .bucket("uetjob")
-                            .object("images.png")
-                            .expiry(2, TimeUnit.HOURS)
-                            .build());
-            System.out.println("Download URL: " + url);
 
         } catch (Exception e) {
             System.out.println("Errow when creating bucket" + minioConfig.getBucketName());
