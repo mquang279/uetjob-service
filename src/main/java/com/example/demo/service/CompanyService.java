@@ -13,4 +13,6 @@ public interface CompanyService {
     Company getCompanyById(Long id);
 
     void deleteUserById(Long id);
+
+    Long getTotalCompanies();
 }
