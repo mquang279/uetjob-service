@@ -68,7 +68,8 @@ public class AuthController {
                 UserDTO userDTO = this.userService.convertToUserDTO(this.userService.getUserByEmail(email));
                 data.setUser(userDTO);
                 // Create JWT Access Token
-                String accessToken = this.securityService.createAccessToken(email, userDTO);
+                String accessToken = this.securityService.createAccessToken(email, userDTO.getRole().getName(),
+                                userDTO);
                 data.setAccessToken(accessToken);
 
                 // Create JWT Refresh Token and store to database
@@ -107,7 +108,8 @@ public class AuthController {
                         data.setUser(userDTO);
 
                         // Create new access token
-                        String accessToken = this.securityService.createAccessToken(email, userDTO);
+                        String accessToken = this.securityService.createAccessToken(email, userDTO.getRole().getName(),
+                                        userDTO);
                         data.setAccessToken(accessToken);
 
                         return ResponseEntity.ok().body(data);
@@ -130,7 +132,8 @@ public class AuthController {
                 UserDTO userDTO = this.userService.convertToUserDTO(user);
                 data.setUser(userDTO);
                 // Create JWT Access Token
-                String accessToken = this.securityService.createAccessToken(email, userDTO);
+                String accessToken = this.securityService.createAccessToken(email, userDTO.getRole().getName(),
+                                userDTO);
                 data.setAccessToken(accessToken);
 
                 // Create new JWT Refresh Token and Store to database

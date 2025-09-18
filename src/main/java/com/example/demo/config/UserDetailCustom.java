@@ -23,10 +23,10 @@ public class UserDetailCustom implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         com.example.demo.entity.User user = this.userService.getUserByEmail(username);
-        return new User(
-                user.getEmail(),
-                user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+        return User.builder()
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .authorities(user.getRole().getName())
+                .build();
     }
-
 }

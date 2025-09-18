@@ -28,7 +28,16 @@ public interface JobRepository extends JpaRepository<Job, Long> {
                         + "OR j.title LIKE CONCAT('%', :param, '%') "
                         + "OR c.name LIKE CONCAT('%', :param, '%') "
                         + "OR s.name LIKE CONCAT('%', :param, '%')) "
-                        + "ORDER BY j.created_at DESC", nativeQuery = true)
+                        + "ORDER BY j.created_at DESC", countQuery = "SELECT COUNT(DISTINCT j.id) "
+                                        + "FROM job j "
+                                        + "LEFT JOIN job_skill js ON j.id = js.job_id "
+                                        + "LEFT JOIN skill s ON s.id = js.skill_id "
+                                        + "LEFT JOIN companies c ON j.company_id = c.id "
+                                        + "WHERE j.active = true "
+                                        + "AND (j.description LIKE CONCAT('%', :param, '%') "
+                                        + "OR j.title LIKE CONCAT('%', :param, '%') "
+                                        + "OR c.name LIKE CONCAT('%', :param, '%') "
+                                        + "OR s.name LIKE CONCAT('%', :param, '%'))", nativeQuery = true)
         Page<Job> findJobByParam(Pageable pageable, String param);
 
         @Query(value = "SELECT COUNT(*) FROM job WHERE active = true", nativeQuery = true)
