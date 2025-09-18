@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,7 @@ import com.example.demo.dto.response.PresignedUrlResponse;
 import com.example.demo.service.MinioStorageService;
 
 import jakarta.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -30,6 +33,12 @@ public class MinioController {
         String objectKey = request.getFolder() + "/" + request.getFileName();
 
         PresignedUrlResponse response = new PresignedUrlResponse(presignedUrl, objectKey);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/minio/files/{folder}")
+    public ResponseEntity<List<String>> listFilesInFolder(@PathVariable String folder) {
+        List<String> files = minioStorageService.getAllFilesNameInFolder(folder);
+        return ResponseEntity.ok().body(files);
     }
 }

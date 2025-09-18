@@ -45,7 +45,7 @@ public class SecurityService {
      * @param authentication Authentication information of user
      * @return JWT Token
      */
-    public String createAccessToken(String email, UserDTO userDTO) {
+    public String createAccessToken(String email, String role, UserDTO userDTO) {
         Instant now = Instant.now();
         Instant validity = now.plus(this.accessTokenExpiration, ChronoUnit.SECONDS);
 
@@ -55,6 +55,7 @@ public class SecurityService {
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(email)
+                .claim("authorities", role)
                 .claim("user", userClaims)
                 .build();
 
