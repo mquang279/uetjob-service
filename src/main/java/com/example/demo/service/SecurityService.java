@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.response.UserClaims;
 import com.example.demo.dto.response.UserDTO;
+import com.example.demo.entity.Permission;
 import com.nimbusds.jose.util.Base64;
 
 @Service
@@ -45,9 +48,15 @@ public class SecurityService {
      * @param authentication Authentication information of user
      * @return JWT Token
      */
-    public String createAccessToken(String email, String role, UserDTO userDTO) {
+    public String createAccessToken(String email, UserDTO userDTO) {
         Instant now = Instant.now();
         Instant validity = now.plus(this.accessTokenExpiration, ChronoUnit.SECONDS);
+
+        List<String> authorities = new ArrayList<>();
+        for (Permission permission : userDTO.getRole().getPermissions()) {
+            authorities.add(permission.getName());
+        }
+        authorities.add(userDTO.getRole().getName());
 
         // Payload: Contain authentication information
         UserClaims userClaims = new UserClaims(userDTO);
@@ -55,7 +64,7 @@ public class SecurityService {
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(email)
-                .claim("authorities", role)
+                .claim("authorities", authorities)
                 .claim("user", userClaims)
                 .build();
 
