@@ -6,6 +6,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -48,10 +49,23 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults()) // Enable CORS
                 .authorizeHttpRequests(
                         (authz) -> authz
-                                .requestMatchers("/", "/api/v1/auth/login", "/api/v1/auth/refresh",
-                                        "/api/v1/auth/register",
-                                        "/api/v1/jobs/**", "/uploads/company/**")
+                                .requestMatchers(HttpMethod.GET,
+                                        "/api/v1/companies/**",
+                                        "/api/v1/jobs/**",
+                                        "/api/v1/minio/**",
+                                        "/api/v1/skills/**")
                                 .permitAll()
+                                .requestMatchers(
+                                        "/api/v1/resumes/**")
+                                .authenticated()
+                                .requestMatchers(HttpMethod.POST,
+                                        "/api/v1/companies/**",
+                                        "/api/v1/jobs/**",
+                                        "/api/v1/permissions/**",
+                                        "/api/v1/roles/**",
+                                        "/api/v1/users/**",
+                                        "/api/v1/minio/**")
+                                .hasRole("ADMIN")
                                 .anyRequest().authenticated())
                 // Add BearerTokenAuthenticationFilter
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
@@ -88,7 +102,7 @@ public class SecurityConfiguration {
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         grantedAuthoritiesConverter.setAuthorityPrefix("");
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("user");
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
