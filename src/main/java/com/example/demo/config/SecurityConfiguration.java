@@ -66,7 +66,7 @@ public class SecurityConfiguration {
                                         "/api/v1/users/**",
                                         "/api/v1/minio/**")
                                 .hasRole("ADMIN")
-                                .anyRequest().authenticated())
+                                .anyRequest().permitAll())
                 // Add BearerTokenAuthenticationFilter
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
