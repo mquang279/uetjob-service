@@ -49,12 +49,6 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults()) // Enable CORS
                 .authorizeHttpRequests(
                         (authz) -> authz
-                                .requestMatchers(HttpMethod.GET,
-                                        "/api/v1/companies/**",
-                                        "/api/v1/jobs/**",
-                                        "/api/v1/minio/**",
-                                        "/api/v1/skills/**")
-                                .permitAll()
                                 .requestMatchers(
                                         "/api/v1/resumes/**")
                                 .authenticated()
