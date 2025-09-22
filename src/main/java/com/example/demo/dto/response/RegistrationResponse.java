@@ -20,7 +20,7 @@ public class RegistrationResponse {
     private Instant createdAt;
 
     public RegistrationResponse(Long id, String username, String email, Integer age, Gender gender, String address,
-            Instant createdAt) {
+            Instant createdAt, Role role) {
         this.id = id;
         this.username = username;
         this.email = email;
