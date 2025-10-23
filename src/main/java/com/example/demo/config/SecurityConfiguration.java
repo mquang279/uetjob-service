@@ -52,14 +52,6 @@ public class SecurityConfiguration {
                                 .requestMatchers(
                                         "/api/v1/resumes/**")
                                 .authenticated()
-                                .requestMatchers(HttpMethod.POST,
-                                        "/api/v1/companies/**",
-                                        "/api/v1/jobs/**",
-                                        "/api/v1/permissions/**",
-                                        "/api/v1/roles/**",
-                                        "/api/v1/users/**",
-                                        "/api/v1/minio/**")
-                                .hasRole("ADMIN")
                                 .anyRequest().permitAll())
                 // Add BearerTokenAuthenticationFilter
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
